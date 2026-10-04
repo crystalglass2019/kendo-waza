@@ -213,6 +213,7 @@
 
       <footer class="foot">
         <p>※ 本ページの解説は一般的な指導内容をもとにした試作版です。細かな考え方は指導者・地域によって異なる場合があります。公開前に指導者・有段者による監修を推奨します。</p>
+        ${window.ANALYTICS_NOTE ? `<p>${window.ANALYTICS_NOTE}</p>` : ''}
         <a class="back" href="#top">← 技の一覧に戻る</a>
       </footer>`;
 
