@@ -1,36 +1,42 @@
+/* 配色：深緑（見出し帯・主色）／薄緑（面の背景）／薄いオレンジ〜テラコッタ（強調） */
 :root {
-  --bg: #f7f4ee;
+  --bg: #f8f7f1;
   --surface: #ffffff;
-  --surface-2: #f1ece2;
-  --ink: #1d2433;
-  --ink-2: #4b5468;
-  --ink-3: #7b8394;
-  --line: #e3ddd0;
-  --ai: #24355b;        /* 藍 */
-  --ai-soft: #e7ebf4;
-  --shu: #c8372d;       /* 朱 */
-  --shu-soft: #fbe9e6;
-  --gold: #c98a0b;
-  --ok: #2e7d4f;
-  --ok-soft: #e5f3ea;
+  --surface-2: #eef1e9;   /* 薄緑 */
+  --ink: #17241f;
+  --ink-2: #4a5852;
+  --ink-3: #7d8781;
+  --line: #e1e3d9;
+  --ai: #2f4d40;          /* 深緑（主色） */
+  --ai-soft: #e3ebe2;
+  --shu: #bf6440;         /* テラコッタ（強調） */
+  --shu-soft: #f8e7da;    /* 薄いオレンジ */
+  --gold: #b08d55;
+  --ok: #3e7b54;
+  --ok-soft: #e2efe3;
+  --forest: #15231e;      /* 見出し帯の深緑 */
+  --on-forest: #f4f2ea;
+  --on-forest-2: #b7c5bb;
+  --on-forest-line: rgba(244, 242, 234, .18);
+  --accent-on-forest: #e9a882;
   --radius: 14px;
-  --shadow: 0 1px 2px rgba(20, 25, 40, .06), 0 6px 18px rgba(20, 25, 40, .06);
+  --shadow: 0 1px 2px rgba(21, 35, 30, .06), 0 6px 18px rgba(21, 35, 30, .07);
   --font: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Meiryo", system-ui, sans-serif;
   --serif: "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", serif;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #12151c; --surface: #1a1f2a; --surface-2: #222836; --ink: #eceef3; --ink-2: #b9c0cf; --ink-3: #8a92a3;
-    --line: #2d3443; --ai: #9fb3e0; --ai-soft: #232c40; --shu: #ff7a6b; --shu-soft: #3a2220; --gold: #f0b64a;
-    --ok: #6fcf97; --ok-soft: #1d3327; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.25);
+    --bg: #101814; --surface: #17211c; --surface-2: #1d2a24; --ink: #e9eee9; --ink-2: #b8c4bc; --ink-3: #87958c;
+    --line: #2a3832; --ai: #9ccbb2; --ai-soft: #1f2f28; --shu: #e9906a; --shu-soft: #3a261c; --gold: #d4b07a;
+    --ok: #79c896; --ok-soft: #1c3326; --forest: #0b130f; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.25);
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #12151c; --surface: #1a1f2a; --surface-2: #222836; --ink: #eceef3; --ink-2: #b9c0cf; --ink-3: #8a92a3;
-  --line: #2d3443; --ai: #9fb3e0; --ai-soft: #232c40; --shu: #ff7a6b; --shu-soft: #3a2220; --gold: #f0b64a;
-  --ok: #6fcf97; --ok-soft: #1d3327; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.25);
+  --bg: #101814; --surface: #17211c; --surface-2: #1d2a24; --ink: #e9eee9; --ink-2: #b8c4bc; --ink-3: #87958c;
+  --line: #2a3832; --ai: #9ccbb2; --ai-soft: #1f2f28; --shu: #e9906a; --shu-soft: #3a261c; --gold: #d4b07a;
+  --ok: #79c896; --ok-soft: #1c3326; --forest: #0b130f; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.25);
   color-scheme: dark;
 }
 
@@ -44,10 +50,15 @@ a { color: var(--ai); }
 button { font: inherit; color: inherit; cursor: pointer; }
 
 /* ---------- 一覧 ---------- */
-.hero { padding: 28px 0 8px; }
-.eyebrow { font-size: 12px; letter-spacing: .2em; color: var(--shu); font-weight: 700; margin: 0 0 6px; }
+/* 見出し帯：画面幅いっぱいの深緑（横スクロールは出さない） */
+.hero, .waza-hero, .wrap > .back:first-child {
+  background: var(--forest); color: var(--on-forest);
+  box-shadow: 0 0 0 100vmax var(--forest); clip-path: inset(0 -100vmax);
+}
+.hero { padding: 40px 0 36px; margin: -24px 0 24px; }
+.eyebrow { font-size: 12px; letter-spacing: .2em; color: var(--gold); font-weight: 700; margin: 0 0 6px; }
 .hero h1 { font-family: var(--serif); font-size: clamp(30px, 6vw, 44px); letter-spacing: .06em; }
-.hero-lead { color: var(--ink-2); margin-top: 10px; max-width: 40em; }
+.hero-lead { color: var(--on-forest-2); margin-top: 10px; max-width: 40em; }
 
 .toolbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding: 12px 0; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; border-bottom: 1px solid var(--line); margin-bottom: 8px; }
 .toolbar input { flex: 1 1 260px; min-width: 0; padding: 10px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink); font: inherit; }
@@ -73,7 +84,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .stars { color: var(--gold); margin-right: 6px; letter-spacing: 1px; }
 .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .part { font-size: 11.5px; font-weight: 700; padding: 1px 8px; border-radius: 6px; border: 1px solid currentColor; }
-.part-men { color: #3c6fd1; } .part-kote { color: var(--shu); } .part-do { color: #8a5a12; } .part-tsuki { color: #7a3fb5; }
+.part-men { color: var(--ai); } .part-kote { color: var(--shu); } .part-do { color: var(--gold); } .part-tsuki { color: var(--ink-2); }
 .badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
 .badge.ready { background: var(--ok-soft); color: var(--ok); }
 .badge.soon { background: var(--surface-2); color: var(--ink-3); }
@@ -85,20 +96,22 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 /* ---------- 詳細 ---------- */
 .back { display: inline-block; font-size: 14px; text-decoration: none; padding: 6px 0; }
-.waza-hero { padding: 16px 0 20px; }
+.wrap > .back:first-child { display: block; margin-top: -24px; padding: 18px 0 0; color: var(--on-forest-2); }
+.waza-hero { padding: 16px 0 36px; margin-bottom: 8px; }
 .waza-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
 .tag { font-size: 12px; padding: 2px 10px; border-radius: 999px; background: var(--surface-2); color: var(--ink-2); }
+.waza-hero .tag { background: transparent; border: 1px solid var(--on-forest-line); color: var(--on-forest-2); }
 .waza-hero h1 { font-family: var(--serif); font-size: clamp(40px, 9vw, 64px); letter-spacing: .08em; }
-.kana-l { font-family: var(--font); font-size: 16px; color: var(--ink-3); margin-left: 14px; letter-spacing: .1em; }
-.catch { font-family: var(--serif); font-size: clamp(17px, 3vw, 21px); color: var(--shu); margin: 8px 0 0; }
+.kana-l { font-family: var(--font); font-size: 16px; color: var(--accent-on-forest); margin-left: 14px; letter-spacing: .1em; }
+.catch { font-family: var(--serif); font-size: clamp(17px, 3vw, 21px); color: var(--on-forest-2); margin: 8px 0 0; }
 
 .toc { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; display: flex; gap: 4px; overflow-x: auto; background: var(--bg); padding: 10px 0; border-bottom: 1px solid var(--line); scrollbar-width: none; }
 .toc a { flex: none; font-size: 14px; text-decoration: none; color: var(--ink-2); padding: 6px 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); }
 .toc a:hover { color: var(--ai); border-color: var(--ai); }
 
 .sec { padding: 36px 0 8px; }
-.sec > h2 { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font-size: clamp(20px, 3.6vw, 26px); margin-bottom: 18px; padding-bottom: 10px; border-bottom: 2px solid var(--ink); }
-.num { display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--ink); color: var(--bg); font-size: 16px; }
+.sec > h2 { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font-size: clamp(20px, 3.6vw, 26px); margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+.num { display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--ai); color: var(--bg); font-size: 16px; }
 .sub { font-size: 17px; margin: 28px 0 12px; padding-left: 10px; border-left: 4px solid var(--shu); }
 .lead { font-size: 17px; font-weight: 600; }
 
@@ -137,7 +150,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .views button { white-space: nowrap; border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 5px 12px; font-size: 13px; font-weight: 600; color: var(--ink-2); }
 .views button.is-on { background: var(--ai); border-color: var(--ai); color: var(--bg); }
 .ov-kiai { position: absolute; transform: translate(-50%, calc(-100% - 2.2em)); padding: .25em .9em; border-radius: 999px; font-weight: 700; font-size: clamp(11px, 2vw, 16px); background: rgba(255,255,255,.92); color: #555; border: 1px solid rgba(0,0,0,.2); pointer-events: none; white-space: nowrap; }
-.ov-kiai.strong { background: #d4352b; color: #fff; border-color: #8f1d16; font-size: clamp(13px, 2.6vw, 21px); font-weight: 800; }
+.ov-kiai.strong { background: #bf6440; color: #fff; border-color: #8a3f22; font-size: clamp(13px, 2.6vw, 21px); font-weight: 800; }
 .ov-ippon { position: absolute; top: 4%; left: 50%; transform: translate(-50%, -8px); opacity: 0; transition: opacity .25s, transform .25s; display: flex; align-items: center; gap: 10px; padding: 6px 16px; border-radius: 10px; background: rgba(255,255,255,.95); border: 2px solid #d4352b; color: #d4352b; font-family: var(--serif); font-weight: 800; font-size: clamp(14px, 2.6vw, 22px); pointer-events: none; }
 .ov-ippon.show { opacity: 1; transform: translate(-50%, 0); }
 .ov-ippon .flags { display: inline-flex; gap: 4px; }
@@ -146,7 +159,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .ov-hint { position: absolute; left: 10px; bottom: 8px; margin: 0; font-size: 12px; padding: 3px 10px; border-radius: 999px; background: rgba(0,0,0,.5); color: #fff; pointer-events: none; }
 .ov-hint[hidden], .ov-kiai[hidden] { display: none; }
 .sub-note { font-size: 13px; font-weight: 400; color: var(--ink-3); margin-left: 6px; }
-.big-play { position: absolute; inset: 0; margin: auto; width: 76px; height: 76px; border-radius: 50%; border: 0; background: rgba(200, 55, 45, .92); color: #fff; font-size: 30px; padding-left: 6px; box-shadow: 0 6px 20px rgba(0,0,0,.25); }
+.big-play { position: absolute; inset: 0; margin: auto; width: 76px; height: 76px; border-radius: 50%; border: 0; background: rgba(191, 100, 64, .95); color: #fff; font-size: 30px; padding-left: 6px; box-shadow: 0 6px 20px rgba(0,0,0,.25); }
 .big-play[hidden] { display: none; }
 .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--line); }
 .ctl { width: 40px; height: 36px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface-2); font-size: 14px; }
