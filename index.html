@@ -3,16 +3,320 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>剣道 技図鑑</title>
-  <meta name="description" content="剣道の技を3Dアニメーション（3つの視点・スロー再生）と解説で学べる技図鑑。">
+  <title>剣道 技図鑑｜剣道の技を3Dアニメーションで解説（面・出小手）</title>
+  <meta name="description" content="剣道の技を1つずつ、3Dアニメーション（横から・攻撃側から・相手側から／スロー再生）と解説で学べる無料の技図鑑。技を出す側・受ける側のコツや、試合で一本になる条件（有効打突）まで分かります。">
+  <link rel="canonical" href="https://crystalglass2019.github.io/kendo-waza/">
+  <meta property="og:site_name" content="剣道 技図鑑">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="剣道 技図鑑｜剣道の技を3Dアニメーションで解説（面・出小手）">
+  <meta property="og:description" content="剣道の技を1つずつ、3Dアニメーション（横から・攻撃側から・相手側から／スロー再生）と解説で学べる無料の技図鑑。技を出す側・受ける側のコツや、試合で一本になる条件（有効打突）まで分かります。">
+  <meta property="og:url" content="https://crystalglass2019.github.io/kendo-waza/">
+  <meta property="og:image" content="https://crystalglass2019.github.io/kendo-waza/img/ogp.jpg">
+  <meta property="og:locale" content="ja_JP">
+  <meta name="twitter:card" content="summary_large_image">
+  
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
+  <script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "剣道 技図鑑",
+    "url": "https://crystalglass2019.github.io/kendo-waza/",
+    "inLanguage": "ja",
+    "description": "剣道の技を1つずつ、3Dアニメーション（横から・攻撃側から・相手側から／スロー再生）と解説で学べる無料の技図鑑。技を出す側・受ける側のコツや、試合で一本になる条件（有効打突）まで分かります。",
+    "publisher": {
+      "@type": "Organization",
+      "name": "剣道 技図鑑",
+      "url": "https://crystalglass2019.github.io/kendo-waza/"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "公開中の技",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "面",
+        "url": "https://crystalglass2019.github.io/kendo-waza/men/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "出小手",
+        "url": "https://crystalglass2019.github.io/kendo-waza/debana-kote/"
+      }
+    ]
+  }
+]
+  </script>
 </head>
-<body>
-  <main id="app" class="wrap"></main>
+<body data-page="list" data-root="">
+  <main id="app" class="wrap">
+      <header class="hero">
+        <p class="eyebrow">KENDO WAZA ZUKAN</p>
+        <h1>剣道 技図鑑</h1>
+        <p class="hero-lead">1つの技を、動き・スロー・攻める側と受ける側のコツ・一本になる条件まで、ひとつのページで。</p>
+      </header>
+      <div class="toolbar">
+        <input id="q" type="search" placeholder="技の名前で探す（例：こて、面）" aria-label="技を検索">
+        <div class="chips" role="tablist">
+          <button class="chip is-on" data-cat="all">すべて</button>
+          <button class="chip" data-cat="しかけ技">しかけ技</button>
+          <button class="chip" data-cat="応じ技">応じ技</button>
+        </div>
+      </div>
+      <div id="groups">
+            <section class="group">
+              <div class="group-head">
+                <span class="cat-tag shikake">しかけ技</span>
+                <h2>一本打ちの技</h2>
+                <p>機会をとらえて、一つの打突で決める基本の技</p>
+              </div>
+              <div class="cards"><a class="card is-ready" href="men/">
+        <div class="card-top">
+          <span class="part part-men">面</span>
+          <span class="badge ready">公開中</span>
+        </div>
+        <h3>面</h3>
+        <p class="kana">めん</p>
+        <p class="summary">真っすぐ振りかぶり、相手の正面を打つ最も基本の技</p>
+        <p class="level"><span class="stars">★☆☆</span>初級</p><span class="go">詳しく見る →</span></a><div class="card is-soon" aria-disabled="true">
+        <div class="card-top">
+          <span class="part part-kote">小手</span>
+          <span class="badge soon">準備中</span>
+        </div>
+        <h3>小手</h3>
+        <p class="kana">こて</p>
+        <p class="summary">相手の右小手を、小さく鋭く打つ</p>
+        <p class="level"><span class="stars">★☆☆</span>初級</p></div><div class="card is-soon" aria-disabled="true">
+        <div class="card-top">
+          <span class="part part-do">胴</span>
+          <span class="badge soon">準備中</span>
+        </div>
+        <h3>胴</h3>
+        <p class="kana">どう</p>
+        <p class="summary">相手の右胴を、刃筋を立てて斜めに打つ</p>
+        <p class="level"><span class="stars">★☆☆</span>初級</p></div><div class="card is-soon" aria-disabled="true">
+        <div class="card-top">
+          <span class="part part-tsuki">突き</span>
+          <span class="badge soon">準備中</span>
+        </div>
+        <h3>突き</h3>
+        <p class="kana">つき</p>
+        <p class="summary">相手の喉元（突き垂）を、腰から真っすぐ突く</p>
+        <p class="level"><span class="stars">★★★</span>上級</p></div></div>
+            </section>
+            <section class="group">
+              <div class="group-head">
+                <span class="cat-tag shikake">しかけ技</span>
+                <h2>二・三段の技</h2>
+                <p>最初の打突で相手を崩し、連続して打つ技</p>
+              </div>
+              <div class="cards"><div class="card is-soon" aria-disabled="true">
+        <div class="card-top">
+          <span class="part part-men">面</span>
+          <span class="badge soon">準備中</span>
+        </div>
+        <h3>小手 → 面</h3>
+        <p class="kana">こてめん</p>
+        <p class="summary">小手で相手の手元を動かし、空いた面を続けて打つ</p>
+        <p class="level"><span class="stars">★★☆</span>中級</p></div><div class="card is-soon" aria-disabled="true">
+        <div class="card-top">
+          <span class="part part-do">胴</span>
+          <span class="badge soon">準備中</span>
+        </div>
+        <h3>小手 → 胴</h3>
+        <p class="kana">こてどう</p>
+        <p class="summary">小手で相手の手元を上げさせ、空いた胴を打つ</p>
+        <p class="level"><span class="stars">★★☆</span>中級</p></div></div>
+            </section>
+            <section class="group">
+              <div class="group-head">
+                <span class="cat-tag shikake">しかけ技</span>
+                <h2>払い技</h2>
+                <p>相手の竹刀を払って中心を崩し、打つ技</p>
+              </div>
+              <div class="cards"><div class="card is-soon" aria-disabled="true">
+        <div class="card-top">
+          <span class="part part-men">面</span>
+          <span class="badge soon">準備中</span>
+        </div>
+        <h3>払い面</h3>
+        <p class="kana">はらいめん</p>
+        <p class="summary">相手の竹刀を表から払い、中心が空いたところへ面</p>
+        <p class="level"><span class="stars">★★☆</span>中級</p></div><div class="card is-soon" aria-disabled="true">
+        <div class="card-top">
+          <span class="part part-kote">小手</span>
+          <span class="badge soon">準備中</span>
+        </div>
+        <h3>払い小手</h3>
+        <p class="kana">はらいこて</p>
+        <p class="summary">相手の竹刀を裏から払い、右小手を打つ</p>
+        <p class="level"><span class="stars">★★☆</span>中級</p></div></div>
+            </section>
+            <section class="group">
+              <div class="group-head">
+                <span class="cat-tag shikake">しかけ技</span>
+                <h2>出ばな技</h2>
+                <p>相手が打とうと動き出す瞬間（出ばな）を打つ技</p>
+              </div>
+              <div class="cards"><div class="card is-soon" aria-disabled="true">
+        <div class="card-top">
+          <span class="part part-men">面</span>
+          <span class="badge soon">準備中</span>
+        </div>
+        <h3>出ばな面</h3>
+        <p class="kana">でばなめん</p>
+        <p class="summary">相手が出ようとする瞬間に、真っすぐ面を打つ</p>
+        <p class="level"><span class="stars">★★★</span>上級</p></div><a class="card is-ready" href="debana-kote/">
+        <div class="card-top">
+          <span class="part part-kote">小手</span>
+          <span class="badge ready">公開中</span>
+        </div>
+        <h3>出小手<small>（出ばな小手）</small></h3>
+        <p class="kana">でごて</p>
+        <p class="summary">相手が面を打とうと手元を上げた瞬間、その右小手を打つ</p>
+        <p class="level"><span class="stars">★★☆</span>中級</p><span class="go">詳しく見る →</span></a></div>
+            </section>
+            <section class="group">
+              <div class="group-head">
+                <span class="cat-tag shikake">しかけ技</span>
+                <h2>引き技</h2>
+                <p>近い間合いから、下がりながら打つ技</p>
+              </div>
+              <div class="cards"><div class="card is-soon" aria-disabled="true">
+        <div class="card-top">
+          <span class="part part-men">面</span>
+          <span class="badge soon">準備中</span>
+        </div>
+        <h3>引き面</h3>
+        <p class="kana">ひきめん</p>
+        <p class="summary">鍔迫り合いから相手を崩し、下がりながら面</p>
+        <p class="level"><span class="stars">★★☆</span>中級</p></div><div class="card is-soon" aria-disabled="true">
+        <div class="card-top">
+          <span class="part part-kote">小手</span>
+          <span class="badge soon">準備中</span>
+        </div>
+        <h3>引き小手</h3>
+        <p class="kana">ひきこて</p>
+        <p class="summary">鍔迫り合いから、下がりながら右小手</p>
+        <p class="level"><span class="stars">★★☆</span>中級</p></div><div class="card is-soon" aria-disabled="true">
+        <div class="card-top">
+          <span class="part part-do">胴</span>
+          <span class="badge soon">準備中</span>
+        </div>
+        <h3>引き胴</h3>
+        <p class="kana">ひきどう</p>
+        <p class="summary">相手の手元が上がった瞬間、下がりながら胴</p>
+        <p class="level"><span class="stars">★★☆</span>中級</p></div></div>
+            </section>
+            <section class="group">
+              <div class="group-head">
+                <span class="cat-tag shikake">しかけ技</span>
+                <h2>担ぎ技</h2>
+                <p>竹刀を肩に担ぐように振りかぶり、相手を惑わせて打つ技</p>
+              </div>
+              <div class="cards"><div class="card is-soon" aria-disabled="true">
+        <div class="card-top">
+          <span class="part part-men">面</span>
+          <span class="badge soon">準備中</span>
+        </div>
+        <h3>担ぎ面</h3>
+        <p class="kana">かつぎめん</p>
+        <p class="summary">竹刀を担いで相手の反応を誘い、面を打つ</p>
+        <p class="level"><span class="stars">★★★</span>上級</p></div></div>
+            </section>
+            <section class="group">
+              <div class="group-head">
+                <span class="cat-tag oji">応じ技</span>
+                <h2>抜き技</h2>
+                <p>相手の打突を体さばきでかわし、空を打たせて打つ技</p>
+              </div>
+              <div class="cards"><div class="card is-soon" aria-disabled="true">
+        <div class="card-top">
+          <span class="part part-do">胴</span>
+          <span class="badge soon">準備中</span>
+        </div>
+        <h3>面抜き胴</h3>
+        <p class="kana">めんぬきどう</p>
+        <p class="summary">相手の面を右前へ抜けてかわし、胴を打つ</p>
+        <p class="level"><span class="stars">★★☆</span>中級</p></div><div class="card is-soon" aria-disabled="true">
+        <div class="card-top">
+          <span class="part part-men">面</span>
+          <span class="badge soon">準備中</span>
+        </div>
+        <h3>小手抜き面</h3>
+        <p class="kana">こてぬきめん</p>
+        <p class="summary">相手の小手を手元を上げて抜き、面を打つ</p>
+        <p class="level"><span class="stars">★★★</span>上級</p></div></div>
+            </section>
+            <section class="group">
+              <div class="group-head">
+                <span class="cat-tag oji">応じ技</span>
+                <h2>すり上げ技</h2>
+                <p>相手の竹刀をすり上げて打突をそらし、打つ技</p>
+              </div>
+              <div class="cards"><div class="card is-soon" aria-disabled="true">
+        <div class="card-top">
+          <span class="part part-men">面</span>
+          <span class="badge soon">準備中</span>
+        </div>
+        <h3>面すり上げ面</h3>
+        <p class="kana">めんすりあげめん</p>
+        <p class="summary">相手の面を表ですり上げ、そのまま面を打つ</p>
+        <p class="level"><span class="stars">★★★</span>上級</p></div><div class="card is-soon" aria-disabled="true">
+        <div class="card-top">
+          <span class="part part-men">面</span>
+          <span class="badge soon">準備中</span>
+        </div>
+        <h3>小手すり上げ面</h3>
+        <p class="kana">こてすりあげめん</p>
+        <p class="summary">相手の小手を裏ですり上げ、面を打つ</p>
+        <p class="level"><span class="stars">★★★</span>上級</p></div></div>
+            </section>
+            <section class="group">
+              <div class="group-head">
+                <span class="cat-tag oji">応じ技</span>
+                <h2>返し技</h2>
+                <p>相手の打突を竹刀で受け、反対側へ返して打つ技</p>
+              </div>
+              <div class="cards"><div class="card is-soon" aria-disabled="true">
+        <div class="card-top">
+          <span class="part part-do">胴</span>
+          <span class="badge soon">準備中</span>
+        </div>
+        <h3>面返し胴</h3>
+        <p class="kana">めんかえしどう</p>
+        <p class="summary">相手の面を竹刀で受け、手首を返して胴を打つ</p>
+        <p class="level"><span class="stars">★★☆</span>中級</p></div></div>
+            </section>
+            <section class="group">
+              <div class="group-head">
+                <span class="cat-tag oji">応じ技</span>
+                <h2>打ち落とし技</h2>
+                <p>相手の打突を打ち落とし、すかさず打つ技</p>
+              </div>
+              <div class="cards"><div class="card is-soon" aria-disabled="true">
+        <div class="card-top">
+          <span class="part part-men">面</span>
+          <span class="badge soon">準備中</span>
+        </div>
+        <h3>胴打ち落とし面</h3>
+        <p class="kana">どううちおとしめん</p>
+        <p class="summary">相手の胴を打ち落とし、すかさず面を打つ</p>
+        <p class="level"><span class="stars">★★★</span>上級</p></div></div>
+            </section></div>
+      <p class="note">※ 現在は「面」「出小手」の詳細ページを公開しています（試作版）。他の技は順次追加予定です。</p>
+  </main>
   <script src="js/analytics.js" charset="utf-8"></script>
   <script src="js/data.js" charset="utf-8"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="js/kendo3d.js" charset="utf-8"></script>
+  <script src="js/templates.js" charset="utf-8"></script>
   <script src="js/app.js" charset="utf-8"></script>
 </body>
 </html>
