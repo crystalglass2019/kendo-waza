@@ -16,6 +16,19 @@
     if (page === 'list' && WAZA_DETAIL[legacy]) { location.replace(Templates.wazaUrl(root, legacy)); return; }
     if (WAZA_DETAIL[page]) renderDetail(page);
     else renderList();
+    bindVideos();
+  }
+
+  // YouTube：サムネイルを押したら動画を読み込んで再生する
+  function bindVideos() {
+    app.querySelectorAll('.yt').forEach(box => box.querySelector('.yt-play').addEventListener('click', () => {
+      const f = document.createElement('iframe');
+      f.src = `https://www.youtube-nocookie.com/embed/${box.dataset.id}?autoplay=1&rel=0`;
+      f.title = box.querySelector('img').alt;
+      f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      f.allowFullscreen = true;
+      box.replaceChildren(f);
+    }));
   }
 
   /* ================= 技の一覧 ================= */
@@ -113,12 +126,17 @@
     }));
     phaseBtns.forEach(b => b.addEventListener('click', () => { player.pause(); player.seek(+b.dataset.t); }));
 
-    // 分解画像（選択中の視点で描画。自由視点のときは「横から」）
+    // 分解画像：横からは用意した画像を表示。ほかの視点を選んだときだけ、その視点で描き直す
     const cvs = [...app.querySelectorAll('canvas.still')];
+    const imgs = [...app.querySelectorAll('img.still-img')];
     const stillView = $('#stillView');
     const paintStills = () => {
       const v = player.view === 'free' ? 'side' : player.view;
       stillView.textContent = `— ${Kendo3D.VIEWS[v].label}の視点`;
+      const useImg = v === 'side' && imgs.length && imgs.every(im => !im.dataset.broken);
+      imgs.forEach(im => { im.hidden = !useImg; });
+      cvs.forEach(c => { c.hidden = useImg; });
+      if (useImg) return;
       cvs.forEach(c => {
         const s = steps[+c.dataset.i];
         const r = c.getBoundingClientRect();
@@ -128,6 +146,8 @@
         player.snapshot(c, s.t, v, s.marks);
       });
     };
+    // 画像が読めなかったときは描画に切り替える
+    imgs.forEach(im => im.addEventListener('error', () => { im.dataset.broken = '1'; paintStills(); }));
     paintStills();
     let rt = null;
     const onResize = () => {

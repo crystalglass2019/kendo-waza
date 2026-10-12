@@ -248,3 +248,43 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .featured b { font-family: var(--serif); font-size: 20px; color: var(--shu); }
 .featured span { font-size: 13.5px; color: var(--ink-2); flex: 1; }
 .featured i { font-style: normal; font-weight: 700; color: var(--shu); white-space: nowrap; }
+
+/* ---------- 検索対策で追加した要素 ---------- */
+/* パンくず（見出し帯の一番上） */
+.crumbs {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px;
+  margin-top: -24px; padding: 18px 0 0; font-size: 13px; color: var(--on-forest-2);
+  background: var(--forest); box-shadow: 0 0 0 100vmax var(--forest); clip-path: inset(0 -100vmax);
+}
+.crumbs a { color: var(--on-forest); text-decoration: none; }
+.crumbs a:hover { text-decoration: underline; }
+.crumbs span[aria-hidden], .crumbs > span:not([aria-current]) { opacity: .85; }
+
+/* 分解5コマ：画像と描画を同じ枠に */
+.still-wrap { position: relative; }
+.still-img { width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: 10px; display: block; object-fit: cover; background: var(--surface-2); }
+
+/* YouTube（サムネイルを押すと再生） */
+.yt-wrap { margin: 0; max-width: 720px; }
+.yt { position: relative; aspect-ratio: 16 / 9; border-radius: var(--radius); overflow: hidden; background: #000; max-width: 100%; }
+.yt-play { all: unset; cursor: pointer; display: block; width: 100%; height: 100%; position: relative; }
+.yt-play img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.yt-btn { position: absolute; inset: 0; margin: auto; width: 72px; height: 50px; border-radius: 14px; background: rgba(191, 100, 64, .95); color: #fff; display: grid; place-items: center; font-size: 24px; box-shadow: 0 6px 18px rgba(0,0,0,.3); }
+.yt-play:focus-visible { outline: 3px solid var(--shu); outline-offset: -3px; }
+.yt iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.yt-wrap figcaption { font-size: 13px; color: var(--ink-3); margin-top: 8px; }
+
+/* 用語へのリンク */
+.term-links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.term-links a { display: inline-flex; align-items: baseline; gap: 6px; padding: 7px 14px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; }
+.term-links a:hover { border-color: var(--ai); color: var(--ai); }
+.term-links small { font-size: 11px; color: var(--ink-3); }
+.glossary dt a { color: inherit; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+.term-index dt { display: flex; align-items: baseline; gap: 8px; }
+.term-index dt small { font-size: 12px; font-weight: 400; color: var(--ink-3); }
+.more { margin: -6px 0 18px; font-size: 14px; }
+.more a { font-weight: 700; }
+
+/* 関連する技・用語 */
+.related h2 { font-size: 18px; margin: 18px 0 12px; }
+.related .cards { margin-bottom: 8px; }

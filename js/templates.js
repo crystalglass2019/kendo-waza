@@ -11,6 +11,31 @@ const Templates = (() => {
   const VIEW_LABELS = [['side', '横から'], ['attacker', '攻撃側から'], ['receiver', '相手側から'], ['free', '自由視点']];
   const wazaUrl = (root, id) => `${root}${id}/`;
   const homeUrl = root => root || './';
+  const termUrl = (root, id) => `${root}yogo/${id}/`;
+  const glossary = () => (typeof GLOSSARY !== 'undefined' ? GLOSSARY : []);
+  const videos = () => (typeof SITE_VIDEOS !== 'undefined' ? SITE_VIDEOS : []);
+  const readyWaza = () => WAZA_LIST.filter(w => w.status === 'ready');
+  // 用語名から用語ページを探す（例：「出ばな」→「起こり・出ばな」）
+  const findTerm = name => glossary().find(g => g.term.split('・').includes(name) || g.term === name);
+
+  // YouTube 動画：最初はサムネイルだけを表示し、押したときに読み込む（ページを軽く保つ）
+  function videoHTML(v) {
+    return `
+        <figure class="yt-wrap">
+          <div class="yt" data-id="${v.id}">
+            <button class="yt-play" aria-label="動画を再生：${v.title}">
+              <img src="https://i.ytimg.com/vi/${v.id}/hqdefault.jpg" alt="${v.title}" width="480" height="360" loading="lazy">
+              <span class="yt-btn" aria-hidden="true">▶</span>
+            </button>
+          </div>
+          <figcaption>${v.title}（${v.length}）｜<a href="https://www.youtube.com/watch?v=${v.id}" target="_blank" rel="noopener">YouTubeで見る</a></figcaption>
+        </figure>`;
+  }
+
+  function termLinksHTML(root, ids) {
+    return `<ul class="term-links">${ids.map(id => glossary().find(g => g.id === id)).filter(Boolean)
+      .map(g => `<li><a href="${termUrl(root, g.id)}"><b>${g.term}</b><small>${g.kana}</small></a></li>`).join('')}</ul>`;
+  }
 
   /* ---------- 一覧 ---------- */
   function card(w, root) {
@@ -65,6 +90,16 @@ const Templates = (() => {
         </div>
       </div>
       <div id="groups">${groupsHTML(root)}</div>
+      ${videos().length ? `
+      <section class="group">
+        <div class="group-head"><h2>紹介動画</h2><p>剣道 技図鑑でできることを、1分30秒で紹介しています。</p></div>
+        ${videoHTML(videos()[0])}
+      </section>` : ''}
+      ${glossary().length ? `
+      <section class="group">
+        <div class="group-head"><h2>剣道用語の解説</h2><p>技のページに出てくる言葉を、1つずつ詳しく解説しています。<a href="${root}yogo/">用語の一覧 →</a></p></div>
+        ${termLinksHTML(root, glossary().map(g => g.id))}
+      </section>` : ''}
       <p class="note">※ 現在は${WAZA_LIST.filter(w => w.status === 'ready').map(w => `「${w.name}」`).join('')}の詳細ページを公開しています（試作版）。他の技は順次追加予定です。</p>`;
   }
 
@@ -76,8 +111,13 @@ const Templates = (() => {
     const anim = d.anim;
     const roleChip = r => `<span class="role role-${r.mark}"><i></i>${r.name}<small>（${r.sub}）</small></span>`;
 
+    const vids = videos().filter(v => (v.waza || []).includes(id));
+    const terms = glossary().filter(t => (t.waza || []).includes(id));
+    const related = readyWaza().filter(x => x.id !== id);
+    const kwTerm = k => { const t = findTerm(k.term); return t ? `<a href="${termUrl(root, t.id)}">${k.term}</a>` : k.term; };
+
     return `
-      <a class="back" href="${homeUrl(root)}">← 技の一覧</a>
+      <nav class="crumbs" aria-label="現在地"><a href="${homeUrl(root)}">剣道 技図鑑</a><span>›</span><span>${g.name}</span><span>›</span><span aria-current="page">${w.name}</span></nav>
       <header class="waza-hero">
         <div class="waza-tags">
           <span class="cat-tag shikake">${g.category}</span><span class="tag">${g.name}</span><span class="tag">打突部位：${w.part}</span><span class="tag">${stars(w.level)} ${LEVEL[w.level]}</span>
@@ -91,7 +131,7 @@ const Templates = (() => {
       </nav>
 
       <section id="sec-motion" class="sec">
-        <h2><span class="num">1</span>動作</h2>
+        <h2><span class="num">1</span>${w.name}の打ち方（動作）</h2>
         <div class="legend">${roleChip(d.roles.A)}${roleChip(d.roles.B)}</div>
 
         <div class="player">
@@ -136,7 +176,10 @@ const Templates = (() => {
         <ol class="steps">
           ${d.steps.map((s, i) => `
             <li class="step">
-              <canvas class="still" data-i="${i}" aria-label="${s.title}"></canvas>
+              <div class="still-wrap">
+                <img class="still-img" src="${root}img/waza/${id}/step${i + 1}.jpg" alt="${w.name}のSTEP${i + 1}「${s.title}」：${s.text}" width="960" height="540" loading="lazy">
+                <canvas class="still" data-i="${i}" aria-label="${s.title}" hidden></canvas>
+              </div>
               <div class="step-body">
                 <p class="step-no">STEP ${i + 1}</p>
                 <h4>${s.title}</h4>
@@ -144,19 +187,20 @@ const Templates = (() => {
               </div>
             </li>`).join('')}
         </ol>
+        ${vids.length ? `<h3 class="sub">解説動画で見る</h3>${vids.map(videoHTML).join('')}` : ''}
       </section>
 
       <section id="sec-overview" class="sec">
-        <h2><span class="num">2</span>概要</h2>
+        <h2><span class="num">2</span>${w.name}とは（概要）</h2>
         <p class="lead">${d.overview.lead}</p>
         ${d.overview.body.map(p => `<p>${p}</p>`).join('')}
         <dl class="facts">${d.overview.facts.map(f => `<div><dt>${f.label}</dt><dd>${f.value}</dd></div>`).join('')}</dl>
         <h3 class="sub">覚えておきたい言葉</h3>
-        <dl class="glossary">${d.overview.keywords.map(k => `<div><dt>${k.term}</dt><dd>${k.desc}</dd></div>`).join('')}</dl>
+        <dl class="glossary">${d.overview.keywords.map(k => `<div><dt>${kwTerm(k)}</dt><dd>${k.desc}</dd></div>`).join('')}</dl>
       </section>
 
       <section id="sec-attacker" class="sec">
-        <h2><span class="num">3</span>技を出す側が気にすること <small class="role-inline role-red"><i></i>掛かり手</small></h2>
+        <h2><span class="num">3</span>${w.name}を打つときのコツ（技を出す側） <small class="role-inline role-red"><i></i>掛かり手</small></h2>
         <ol class="points">${d.attacker.points.map(p => `<li><h4>${p.title}</h4><p>${p.text}</p></li>`).join('')}</ol>
         <div class="ng-box">
           <p class="ng-title">よくある失敗</p>
@@ -165,15 +209,16 @@ const Templates = (() => {
       </section>
 
       <section id="sec-receiver" class="sec">
-        <h2><span class="num">4</span>受ける側が気にすること <small class="role-inline role-white"><i></i>元立ち</small></h2>
+        <h2><span class="num">4</span>受ける側（元立ち）が気にすること <small class="role-inline role-white"><i></i>元立ち</small></h2>
         <p class="lead">${d.receiver.intro}</p>
         <ol class="points">${d.receiver.points.map(p => `<li><h4>${p.title}</h4><p>${p.text}</p></li>`).join('')}</ol>
         <p class="lesson">${d.receiver.lesson}</p>
       </section>
 
       <section id="sec-match" class="sec">
-        <h2><span class="num">5</span>試合で気にすること・一本になる条件</h2>
+        <h2><span class="num">5</span>${w.name}が一本になる条件・ならない理由</h2>
         <blockquote class="rule"><p>${d.match.rule.quote}</p><cite>${d.match.rule.source}</cite></blockquote>
+        ${glossary().some(t => t.id === 'yuko-datotsu') ? `<p class="more"><a href="${termUrl(root, 'yuko-datotsu')}">有効打突について詳しく →</a></p>` : ''}
         <p>竹刀が当たっただけでは一本になりません。${w.name}の場合、6つの条件はそれぞれ次のように見られます。</p>
         <div class="table-wrap">
           <table class="criteria">
@@ -191,16 +236,66 @@ const Templates = (() => {
         </div>
       </section>
 
+      <section class="sec related" aria-label="関連">
+        ${related.length ? `<h2>関連する技</h2>
+        <div class="cards">${related.map(x => card(x, root)).join('')}</div>` : ''}
+        ${terms.length ? `<h2>${w.name}に関係する剣道用語</h2>${termLinksHTML(root, terms.map(t => t.id))}` : ''}
+      </section>
+
       <footer class="foot">
         <p>※ 本ページの解説は一般的な指導内容をもとにした試作版です。細かな考え方は指導者・地域によって異なる場合があります。公開前に指導者・有段者による監修を推奨します。</p>
         ${opts.analyticsNote ? `<p>${opts.analyticsNote}</p>` : ''}
-        <nav class="other-waza" aria-label="ほかの技">
-          <p>ほかの技を見る：${WAZA_LIST.filter(x => x.status === 'ready' && x.id !== id).map(x => `<a href="${wazaUrl(root, x.id)}">${x.name}</a>`).join('・')}</p>
-        </nav>
         <a class="back" href="${homeUrl(root)}">← 技の一覧に戻る</a>
       </footer>`;
   }
 
-  return { listHTML, groupsHTML, detailHTML, wazaUrl, homeUrl };
+  /* ---------- 用語のページ ---------- */
+  function termHTML(id, root) {
+    const t = glossary().find(g => g.id === id);
+    const waza = (t.waza || []).map(wid => WAZA_LIST.find(w => w.id === wid)).filter(w => w && w.status === 'ready');
+    return `
+      <nav class="crumbs" aria-label="現在地"><a href="${homeUrl(root)}">剣道 技図鑑</a><span>›</span><a href="${root}yogo/">剣道用語</a><span>›</span><span aria-current="page">${t.term}</span></nav>
+      <header class="waza-hero">
+        <div class="waza-tags"><span class="tag">剣道用語</span></div>
+        <h1>${t.term}<span class="kana-l">${t.kana}</span></h1>
+        <p class="catch">${t.summary}</p>
+      </header>
+
+      <section class="sec">
+        <h2>${t.term}（${t.kana}）とは</h2>
+        ${t.body.map(p => `<p>${p}</p>`).join('')}
+      </section>
+
+      <section class="sec">
+        <h2>${t.term}のポイント</h2>
+        <ol class="points">${t.points.map(p => `<li><h4>${p.title}</h4><p>${p.text}</p></li>`).join('')}</ol>
+      </section>
+
+      <section class="sec related">
+        ${waza.length ? `<h2>${t.term}が大切になる技（3Dで解説）</h2>
+        <div class="cards">${waza.map(w => card(w, root)).join('')}</div>` : ''}
+        ${(t.related || []).length ? `<h2>関連する用語</h2>${termLinksHTML(root, t.related)}` : ''}
+      </section>
+
+      <footer class="foot">
+        <p>※ 一般的な指導内容をもとにした解説です。細かな考え方は指導者・地域によって異なる場合があります。</p>
+        <a class="back" href="${root}yogo/">← 剣道用語の一覧</a>　<a class="back" href="${homeUrl(root)}">← 技の一覧</a>
+      </footer>`;
+  }
+
+  function termIndexHTML(root) {
+    return `
+      <nav class="crumbs" aria-label="現在地"><a href="${homeUrl(root)}">剣道 技図鑑</a><span>›</span><span aria-current="page">剣道用語</span></nav>
+      <header class="waza-hero">
+        <h1>剣道用語の解説</h1>
+        <p class="catch">技の解説に出てくる剣道の言葉を、1つずつ分かりやすく。</p>
+      </header>
+      <section class="sec">
+        <dl class="glossary term-index">${glossary().map(g => `<div><dt><a href="${termUrl(root, g.id)}">${g.term}</a><small>${g.kana}</small></dt><dd>${g.summary}</dd></div>`).join('')}</dl>
+      </section>
+      <footer class="foot"><a class="back" href="${homeUrl(root)}">← 技の一覧</a></footer>`;
+  }
+
+  return { listHTML, groupsHTML, detailHTML, termHTML, termIndexHTML, wazaUrl, homeUrl, termUrl };
 })();
 if (typeof module !== 'undefined') module.exports = Templates;
