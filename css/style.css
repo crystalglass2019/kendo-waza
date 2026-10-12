@@ -249,6 +249,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .featured span { font-size: 13.5px; color: var(--ink-2); flex: 1; }
 .featured i { font-style: normal; font-weight: 700; color: var(--shu); white-space: nowrap; }
 
+/* hidden 属性で隠した要素が、display の指定に負けて残らないようにする */
+[hidden] { display: none !important; }
+
 /* ---------- 検索対策で追加した要素 ---------- */
 /* パンくず（見出し帯の一番上） */
 .crumbs {

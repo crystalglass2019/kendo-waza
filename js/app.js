@@ -69,6 +69,7 @@
     let lastPhase = -1;
 
     player = new Kendo3D.Player($('#stage'), anim, {
+      view: Templates.DEFAULT_VIEW,
       onTick: (t, p) => {
         seek.value = t;
         time.textContent = `${t.toFixed(2)}s`;
@@ -126,14 +127,14 @@
     }));
     phaseBtns.forEach(b => b.addEventListener('click', () => { player.pause(); player.seek(+b.dataset.t); }));
 
-    // 分解画像：横からは用意した画像を表示。ほかの視点を選んだときだけ、その視点で描き直す
+    // 分解画像：最初の視点（攻撃側から）は用意した画像を表示。ほかの視点を選んだときだけ、その視点で描き直す
     const cvs = [...app.querySelectorAll('canvas.still')];
     const imgs = [...app.querySelectorAll('img.still-img')];
     const stillView = $('#stillView');
     const paintStills = () => {
-      const v = player.view === 'free' ? 'side' : player.view;
+      const v = player.view === 'free' ? Templates.DEFAULT_VIEW : player.view;
       stillView.textContent = `— ${Kendo3D.VIEWS[v].label}の視点`;
-      const useImg = v === 'side' && imgs.length && imgs.every(im => !im.dataset.broken);
+      const useImg = v === Templates.DEFAULT_VIEW && imgs.length && imgs.every(im => !im.dataset.broken);
       imgs.forEach(im => { im.hidden = !useImg; });
       cvs.forEach(c => { c.hidden = useImg; });
       if (useImg) return;

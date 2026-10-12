@@ -9,6 +9,7 @@ const Templates = (() => {
   const groupOf = id => WAZA_GROUPS.find(g => g.id === id);
   const partClass = p => ({ 面: 'men', 小手: 'kote', 胴: 'do', 突き: 'tsuki' }[p] || 'men');
   const VIEW_LABELS = [['side', '横から'], ['attacker', '攻撃側から'], ['receiver', '相手側から'], ['free', '自由視点']];
+  const DEFAULT_VIEW = 'attacker'; // 最初に表示する視点（分解5コマの静止画も、この視点で用意する）
   const wazaUrl = (root, id) => `${root}${id}/`;
   const homeUrl = root => root || './';
   const termUrl = (root, id) => `${root}yogo/${id}/`;
@@ -142,7 +143,7 @@ const Templates = (() => {
           </div>
           <div class="views" role="tablist" aria-label="視点">
             <span class="views-label">視点</span>
-            ${VIEW_LABELS.map(([k, label], i) => `<button data-view="${k}" class="${i === 0 ? 'is-on' : ''}">${label}</button>`).join('')}
+            ${VIEW_LABELS.map(([k, label]) => `<button data-view="${k}" class="${k === DEFAULT_VIEW ? 'is-on' : ''}">${label}</button>`).join('')}
           </div>
           <div class="stage" id="stage">
             ${opts.no3d ? '<p class="no3d">3D表示に必要なライブラリを読み込めませんでした。インターネットに接続した状態で開いてください。</p>' : ''}
@@ -187,7 +188,6 @@ const Templates = (() => {
               </div>
             </li>`).join('')}
         </ol>
-        ${vids.length ? `<h3 class="sub">解説動画で見る</h3>${vids.map(videoHTML).join('')}` : ''}
       </section>
 
       <section id="sec-overview" class="sec">
@@ -240,6 +240,7 @@ const Templates = (() => {
         ${related.length ? `<h2>関連する技</h2>
         <div class="cards">${related.map(x => card(x, root)).join('')}</div>` : ''}
         ${terms.length ? `<h2>${w.name}に関係する剣道用語</h2>${termLinksHTML(root, terms.map(t => t.id))}` : ''}
+        ${vids.length ? `<h2>関連動画</h2>${vids.map(videoHTML).join('')}` : ''}
       </section>
 
       <footer class="foot">
@@ -296,6 +297,6 @@ const Templates = (() => {
       <footer class="foot"><a class="back" href="${homeUrl(root)}">← 技の一覧</a></footer>`;
   }
 
-  return { listHTML, groupsHTML, detailHTML, termHTML, termIndexHTML, wazaUrl, homeUrl, termUrl };
+  return { DEFAULT_VIEW, listHTML, groupsHTML, detailHTML, termHTML, termIndexHTML, wazaUrl, homeUrl, termUrl };
 })();
 if (typeof module !== 'undefined') module.exports = Templates;

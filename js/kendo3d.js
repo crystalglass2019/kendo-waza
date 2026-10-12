@@ -7,9 +7,9 @@
 const Kendo3D = (() => {
   const D2R = Math.PI / 180;
   const HIP = 90, ANK = 8;
-  const L = { torso: 46, head: 70, upper: 31, fore: 32, thigh: 48, shin: 48, shinai: 118, tsuka: 27, rhand: 21, monouchi: 93 };
-  const FIELDS = ['p', 's', 'crouch', 'lean', 'yaw', 'rf', 'rfs', 'rfy', 'lf', 'lfs', 'lfy', 'heel', 'gx', 'gy', 'gz', 'a', 'b', 'idle'];
-  const DEFAULT_KEY = { p: 0, s: 0, crouch: 0, lean: 0, yaw: 0, rf: 16, rfs: 7, rfy: 0, lf: -22, lfs: -6, lfy: 0, heel: 18, gx: 26, gy: 14, gz: 0, a: 11, b: 0, idle: 1 };
+  const L = { torso: 46, head: 70, upper: 31, fore: 32, thigh: 48, shin: 48, shinai: 118, tsuka: 27, rhand: 15, monouchi: 93 };
+  const FIELDS = ['p', 's', 'crouch', 'lean', 'yaw', 'rf', 'rfs', 'rfy', 'lf', 'lfs', 'lfy', 'heel', 'gx', 'gy', 'gz', 'a', 'b', 'idle', 'twist'];
+  const DEFAULT_KEY = { p: 0, s: 0, crouch: 0, lean: 0, yaw: 0, rf: 16, rfs: 7, rfy: 0, lf: -22, lfs: -6, lfy: 0, heel: 18, gx: 26, gy: 14, gz: 0, a: 11, b: 0, idle: 1, twist: 0 };
 
   const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
   const UP = V(0, 1, 0);
@@ -110,12 +110,17 @@ const Kendo3D = (() => {
     // 腕を前へ伸ばすほど肩（肩甲骨）も前に出る
     const reachF = grip.clone().sub(chest).dot(F);
     const pro = clamp((reachF - 18) / 22, 0, 1);
-    const shR = chest.clone().addScaledVector(R, 16 - 3 * pro).addScaledVector(X, -2 + 8 * pro);
-    const shL = chest.clone().addScaledVector(R, -16).addScaledVector(X, -2 + 4 * pro);
+    // 上体のひねり：右肩を前、左肩を後ろへ（両腕を伸ばしきるときに使う）
+    const tw = st.twist * D2R;
+    const Rt = R.clone().multiplyScalar(Math.cos(tw)).addScaledVector(X, Math.sin(tw));
+    const Xt = X.clone().multiplyScalar(Math.cos(tw)).addScaledVector(R, -Math.sin(tw));
+    const shR = chest.clone().addScaledVector(Rt, 16 - 3 * pro).addScaledVector(Xt, -2 + 8 * pro);
+    const shL = chest.clone().addScaledVector(Rt, -16).addScaledVector(Xt, -2 + 4 * pro);
 
     // 肘の向き：構えでは下・やや外、振りかぶりでは前・やや外に自然に向く
-    const poleR = V().addScaledVector(UP, -1).addScaledVector(R, 0.4).addScaledVector(F, 0.5);
-    const poleL = V().addScaledVector(UP, -1).addScaledVector(R, -0.4).addScaledVector(F, 0.5);
+    // 肘は自然に下へ垂らす（外へ張らず、脇を締めすぎない：ごくわずかに外）
+    const poleR = V().addScaledVector(UP, -1).addScaledVector(R, 0.1).addScaledVector(F, 0.25);
+    const poleL = V().addScaledVector(UP, -1).addScaledVector(R, -0.1).addScaledVector(F, 0.25);
     const elR = ik(shR, rhand, L.upper, L.fore, poleR);
     const elL = ik(shL, grip, L.upper, L.fore, poleL);
 
@@ -131,7 +136,7 @@ const Kendo3D = (() => {
     const men = head.clone().addScaledVector(T, 11).addScaledVector(F, 3);
 
     return {
-      dir, F, R, T, X, f0, r0, hip, chest, head, men, shR, shL, elR, elL, grip, rhand, S, kote,
+      dir, F, R, T, X, Xt, Rt, f0, r0, hip, chest, head, men, shR, shL, elR, elL, grip, rhand, S, kote,
       tip: along(L.shinai), mono: along(L.monouchi), tsuba: along(L.tsuka),
       ankR, ankL, hipR, hipL, knR, knL, st,
     };
@@ -159,11 +164,17 @@ const Kendo3D = (() => {
       const P = players[id];
       for (const k of P.keys) {
         if (!k.aim) continue;
-        const [tid] = k.aim.target.split('.');
-        const tp = players[tid];
-        tp.T = tp.T || buildTracks(tp.keys);
-        const tPose = { [tid]: computePose(sampleState(tp.T, k.t), tp, k.t) };
-        const target = getPoint(tPose, k.aim.target);
+        let target;
+        if (k.aim.point) {
+          // 世界座標の1点を狙う（例：元立ちの面打ちが空を切る位置）
+          target = V(...k.aim.point);
+        } else {
+          const [tid] = k.aim.target.split('.');
+          const tp = players[tid];
+          tp.T = tp.T || buildTracks(tp.keys);
+          const tPose = { [tid]: computePose(sampleState(tp.T, k.t), tp, k.t) };
+          target = getPoint(tPose, k.aim.target);
+        }
         target.y += k.aim.dy || 0;
         // 握り（左手）の位置を、物打ちが目標に当たるよう逆算して k に書き込む
         const setGrip = () => {
@@ -179,12 +190,23 @@ const Kendo3D = (() => {
         // extend: 打突の瞬間に腕が伸びきるよう、踏み込みの位置（腰・両足）を前後に調整する
         if (k.aim.extend) {
           const reach = (L.upper + L.fore) * (k.aim.reach || 0.995);
-          for (let it = 0; it < 30; it++) {
-            const d = tmp.rhand.distanceTo(tmp.shR);
-            if (Math.abs(d - reach) < 0.05) break;
-            const delta = (d - reach) * 0.7;
-            k.p += delta; k.rf += delta; k.lf += delta;
-            tmp = setGrip();
+          const solveP = () => {
+            for (let it = 0; it < 30; it++) {
+              const d = tmp.rhand.distanceTo(tmp.shR);
+              if (Math.abs(d - reach) < 0.05) break;
+              const delta = (d - reach) * 0.7;
+              k.p += delta; k.rf += delta; k.lf += delta;
+              tmp = setGrip();
+            }
+          };
+          solveP();
+          // both: 左腕も伸びきるまで、上体のひねりを少しずつ増やす
+          if (k.aim.both) {
+            const reachL = (L.upper + L.fore) * 0.985;
+            for (let tw = 0; tw <= (k.aim.maxTwist || 50); tw += 2) {
+              k.twist = tw; tmp = setGrip(); solveP();
+              if (tmp.grip.distanceTo(tmp.shL) >= reachL) break;
+            }
           }
         }
       }
@@ -327,6 +349,7 @@ const Kendo3D = (() => {
         doLac: lin(new THREE.MeshPhysicalMaterial({ color: opts.doColor || 0x4a150e, roughness: 0.28, metalness: 0.05, clearcoat: 1, clearcoatRoughness: 0.12, side: THREE.DoubleSide })),
         mune: std(0x181a24, { map: tx.quilt, roughness: 0.7, side: THREE.DoubleSide }),
         leather: std(0x5a3a26, { roughness: 0.62 }),
+        palm: std(0xc79a4b, { roughness: 0.7 }),
         leatherDark: std(0x2c211b, { roughness: 0.6 }),
         metal: std(0xd1d6de, { metalness: 0.9, roughness: 0.32 }),
         face: std(0x0b0c12, { roughness: 1 }),
@@ -383,7 +406,7 @@ const Kendo3D = (() => {
       const doM = add(doGeo, M.doLac, this.torso); doM.scale.set(17, 1, 19.5); doM.position.y = 8;
       const muneProf = [new THREE.Vector2(0.98, 0), new THREE.Vector2(0.9, 6), new THREE.Vector2(0.72, 13)];
       const mune = add(new THREE.LatheGeometry(muneProf, 28, Math.PI / 2 - 1.55, 3.1), M.mune, this.torso); mune.scale.set(17, 1, 19); mune.position.y = 41;
-      const shGeo = new THREE.SphereGeometry(8.8, 16, 12);
+      const shGeo = new THREE.SphereGeometry(8.4, 16, 12);
       // 目印（背中の胴紐に結ぶ）
       this.markKnot = add(new THREE.SphereGeometry(2.2, 10, 8), M.mark, this.torso); this.markKnot.position.set(-15, 40, 0);
 
@@ -414,18 +437,47 @@ const Kendo3D = (() => {
 
       /* --- 腕・小手 --- */
       this.shR = add(shGeo, M.sleeve); this.shL = add(shGeo, M.sleeve);
-      const upGeo = new THREE.CylinderGeometry(9.2, 7.4, 1, 16, 1, true);
+      const upGeo = new THREE.CylinderGeometry(8.7, 7.1, 1, 16, 1, true);
       const sleeveMat = std(0x223050, { map: tx.cloth, side: THREE.DoubleSide });
       this.upR = add(upGeo, sleeveMat); this.upL = add(upGeo, sleeveMat);
       const elGeo = new THREE.SphereGeometry(5.6, 12, 10);
       this.elR = add(elGeo, M.futon); this.elL = add(elGeo, M.futon);
       const foreGeo = new THREE.CylinderGeometry(5.6, 5.0, 1, 14);
       this.foreR = add(foreGeo, M.futon); this.foreL = add(foreGeo, M.futon);
-      const koteGeo = new THREE.CylinderGeometry(6.6, 6.2, 1, 16);
+      const koteGeo = new THREE.CylinderGeometry(5.5, 7.6, 1, 20); // +y が手先（細い）、肘側が広い筒
       this.koteR = add(koteGeo, M.futon); this.koteL = add(koteGeo, M.futon);
-      const fistGeo = new THREE.SphereGeometry(1, 16, 12);
-      this.fistR = add(fistGeo, M.leather); this.fistL = add(fistGeo, M.leather);
-      for (const f of [this.fistR, this.fistL]) f.scale.set(6.4, 7.5, 6.4);
+      // 小手の手の部分（竹刀ローカル座標：y=剣先方向, x=弦の側, z=横）
+      // 実物の小手：4本の指も親指も内側へ丸め込んだ、丸くて厚いミトン型。
+      //   甲側は紺の布（刺し子）、竹刀に触れる手のひら側は黄みがかった革
+      const sph = new THREE.SphereGeometry(1, 20, 16);
+      const makeHand = mirror => {
+        const g = new THREE.Group();
+        const part = (mat, pos, scale) => {
+          const m = new THREE.Mesh(sph, mat);
+          m.position.set(...pos); m.scale.set(...scale);
+          g.add(m);
+          return m;
+        };
+        // 手の甲（丸いドーム）
+        part(M.futon, [1.5, 0.2, 0], [5.8, 5.6, 5.8]);
+        // 内側へ丸め込んだ4本の指（竹刀の下へ回り込む）。指ごとに丸い面をもち、境目に溝ができる
+        for (let i = 0; i < 4; i++) {
+          const y = 0.2 + (i - 1.5) * 2.35;
+          part(M.futon, [-2.1, y, 0.2], [3.6, 1.25, 3.9]);       // 指の背
+        }
+        // 手のひら側（竹刀に触れる革の面）：ひとつながりの面にする
+        part(M.palm, [-4.2, 0.2, 0.3], [1.6, 5.4, 3.3]);
+        // 親指：突き出さず、手の横に丸く寄せて、内側へ巻き込む（指の上に重なる）
+        part(M.futon, [-0.3, 1.0, 5.1], [3.0, 3.2, 2.5]);
+        part(M.palm, [-1.9, 1.0, 4.3], [1.3, 2.4, 1.6]);
+        // 親指と指のあいだ（浅い影）
+        part(M.leatherDark, [-0.8, 3.7, 3.8], [1.2, 0.35, 2.6]);
+        if (mirror) g.scale.z = -1;
+        root.add(g);
+        return g;
+      };
+      this.fistR = makeHand(false);
+      this.fistL = makeHand(true);
 
       /* --- 竹刀（ローカル: +y が剣先、+x が弦側＝峰） --- */
       this.shinai = new THREE.Group(); root.add(this.shinai);
@@ -456,7 +508,7 @@ const Kendo3D = (() => {
       m.makeBasis(F, UP, R); this.waist.quaternion.setFromRotationMatrix(m);
       // 胴体（前傾込み）
       this.torso.position.copy(hip);
-      m.makeBasis(X, T, R); this.torso.quaternion.setFromRotationMatrix(m);
+      m.makeBasis(P.Xt, T, P.Rt); this.torso.quaternion.setFromRotationMatrix(m);
       // 頭：前傾の一部を打ち消して、目線を相手に向ける
       const lean = P.st.lean * D2R * 0.45;
       const Fh = F.clone().multiplyScalar(Math.cos(lean)).addScaledVector(UP, -Math.sin(lean));
@@ -487,8 +539,8 @@ const Kendo3D = (() => {
       between(this.upR, P.shR, P.elR); between(this.upL, P.shL, P.elL);
       this.elR.position.copy(P.elR); this.elL.position.copy(P.elL);
       between(this.foreR, P.elR, P.rhand); between(this.foreL, P.elL, P.grip);
-      between(this.koteR, P.elR.clone().lerp(P.rhand, 0.42), P.elR.clone().lerp(P.rhand, 0.9));
-      between(this.koteL, P.elL.clone().lerp(P.grip, 0.42), P.elL.clone().lerp(P.grip, 0.9));
+      between(this.koteR, P.elR.clone().lerp(P.rhand, 0.34), P.elR.clone().lerp(P.rhand, 0.93));
+      between(this.koteL, P.elL.clone().lerp(P.grip, 0.34), P.elL.clone().lerp(P.grip, 0.93));
 
       // 竹刀の向き：+y を剣先方向、+x を弦（上側）に
       const S = P.S;
@@ -535,7 +587,7 @@ const Kendo3D = (() => {
 
   /* ================= ステージ（シーン一式） ================= */
   class Stage {
-    constructor(container, anim) {
+    constructor(container, anim, view = 'side') {
       this.anim = anim;
       this.container = container;
       const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -543,7 +595,7 @@ const Kendo3D = (() => {
       renderer.outputEncoding = THREE.sRGBEncoding;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.0;
-      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.enabled = false; // 人の影は表示しない
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       container.prepend(renderer.domElement);
       this.renderer = renderer;
@@ -559,7 +611,7 @@ const Kendo3D = (() => {
       scene.add(new THREE.HemisphereLight(0xfff6e8, 0x8a6a45, 0.55));
       const sun = new THREE.DirectionalLight(0xfff1dc, 1.6);
       sun.position.set(160, 520, 300);
-      sun.castShadow = true;
+      sun.castShadow = false;
       sun.shadow.mapSize.set(2048, 2048);
       Object.assign(sun.shadow.camera, { left: -320, right: 320, top: 320, bottom: -320, near: 100, far: 1200 });
       sun.shadow.bias = -0.0004;
@@ -623,9 +675,9 @@ const Kendo3D = (() => {
       scene.add(this.trail);
 
       // カメラ
-      this.view = 'side';
-      this.camPos = VIEWS.side.pos.clone();
-      this.camTarget = VIEWS.side.target.clone();
+      this.view = view;
+      this.camPos = VIEWS[view].pos.clone();
+      this.camTarget = VIEWS[view].target.clone();
       this.camFrom = null;
       this.orbit = { az: 0, el: 0.12, r: 500 };
       this._bindOrbit();
@@ -806,9 +858,9 @@ const Kendo3D = (() => {
 
   /* ================= プレイヤー ================= */
   class Player {
-    constructor(container, anim, { onTick } = {}) {
+    constructor(container, anim, { onTick, view = 'side' } = {}) {
       this.anim = anim;
-      this.stage = new Stage(container, anim);
+      this.stage = new Stage(container, anim, view);
       this.t = 0;
       this.speed = 1;
       this.playing = false;
@@ -896,5 +948,5 @@ const Kendo3D = (() => {
     }
   }
 
-  return { prepare, Player, VIEWS, Sound, available: () => typeof THREE !== 'undefined' };
+  return { prepare, Player, VIEWS, Sound, available: () => typeof THREE !== 'undefined', _computePose: computePose, _sampleState: sampleState };
 })();
