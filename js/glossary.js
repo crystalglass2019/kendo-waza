@@ -20,7 +20,7 @@ const GLOSSARY = [
       { title: '刃筋正しく', text: '打つ方向と竹刀の刃の向きが一致していること。' },
       { title: '残心', text: '打った後も相手の反撃に備える身構え・気構えがあること。' },
     ],
-    waza: ['men', 'debana-kote'],
+    waza: ['men', 'debana-kote', 'kote', 'do', 'tsuki', 'kote-men', 'hiki-men', 'men-nuki-do', 'kote-do', 'harai-men', 'harai-kote', 'debana-men', 'hiki-kote', 'hiki-do', 'katsugi-men', 'kote-nuki-men', 'men-suriage-men', 'kote-suriage-men', 'men-kaeshi-do', 'do-uchiotoshi-men'],
     related: ['zanshin', 'kikentai', 'monouchi', 'hasuji'],
   },
   {
@@ -36,7 +36,7 @@ const GLOSSARY = [
       { title: '構え直す', text: '剣先を相手の中心につけ、いつでも次の打突ができる構えに戻る。' },
       { title: '誇示しない', text: 'ガッツポーズなど、一本を誇示する動作は有効打突の取り消しにつながる。' },
     ],
-    waza: ['men', 'debana-kote'],
+    waza: ['men', 'debana-kote', 'kote', 'do', 'tsuki', 'kote-men', 'hiki-men', 'men-nuki-do', 'kote-do', 'harai-men', 'harai-kote', 'debana-men', 'hiki-kote', 'hiki-do', 'katsugi-men', 'kote-nuki-men', 'men-suriage-men', 'kote-suriage-men', 'men-kaeshi-do', 'do-uchiotoshi-men'],
     related: ['yuko-datotsu', 'kikentai'],
   },
   {
@@ -52,7 +52,7 @@ const GLOSSARY = [
       { title: '剣', text: '物打ちで、刃筋正しく打突部位をとらえる。' },
       { title: '体', text: '右足の踏み込みと打突を合わせ、左足をすぐ引きつける。' },
     ],
-    waza: ['men', 'debana-kote'],
+    waza: ['men', 'debana-kote', 'kote', 'do', 'tsuki', 'kote-men', 'hiki-men', 'men-nuki-do', 'kote-do', 'harai-men', 'harai-kote', 'debana-men', 'hiki-kote', 'hiki-do', 'katsugi-men', 'kote-nuki-men', 'men-suriage-men', 'kote-suriage-men', 'men-kaeshi-do', 'do-uchiotoshi-men'],
     related: ['yuko-datotsu', 'fumikomi', 'tenouchi'],
   },
   {
@@ -68,7 +68,7 @@ const GLOSSARY = [
       { title: '遠間・近間', text: '一足一刀より遠いのが遠間、近いのが近間。' },
       { title: '個人差', text: '実際の距離は体格や踏み込みの強さで変わる。' },
     ],
-    waza: ['men', 'debana-kote'],
+    waza: ['men', 'debana-kote', 'kote', 'do', 'tsuki', 'kote-men', 'hiki-men', 'men-nuki-do', 'kote-do', 'harai-men', 'harai-kote', 'debana-men', 'hiki-kote', 'hiki-do', 'katsugi-men', 'kote-nuki-men', 'men-suriage-men', 'kote-suriage-men', 'men-kaeshi-do', 'do-uchiotoshi-men'],
     related: ['okori', 'motodachi'],
   },
   {
@@ -84,7 +84,7 @@ const GLOSSARY = [
       { title: '出ばな技', text: '起こりをとらえて打つ技。出ばな面・出小手など。' },
       { title: '待たずに引き出す', text: '攻めて相手を動かし、起こりを作らせる。' },
     ],
-    waza: ['debana-kote'],
+    waza: ['debana-kote', 'kote', 'do', 'tsuki', 'kote-men', 'hiki-men', 'men-nuki-do', 'kote-do', 'harai-men', 'harai-kote', 'debana-men', 'hiki-kote', 'hiki-do', 'katsugi-men', 'kote-nuki-men', 'men-suriage-men', 'kote-suriage-men', 'men-kaeshi-do', 'do-uchiotoshi-men'],
     related: ['issoku-itto', 'tenouchi'],
   },
   {
@@ -99,7 +99,7 @@ const GLOSSARY = [
       { title: '有効打突との関係', text: '物打ちを中心とした刃部で打つことが条件。' },
       { title: '間合い', text: '近すぎると物打ちで打てない。適切な距離から打つ。' },
     ],
-    waza: ['men', 'debana-kote'],
+    waza: ['men', 'debana-kote', 'kote', 'do', 'tsuki', 'kote-men', 'hiki-men', 'men-nuki-do', 'kote-do', 'harai-men', 'harai-kote', 'debana-men', 'hiki-kote', 'hiki-do', 'katsugi-men', 'kote-nuki-men', 'men-suriage-men', 'kote-suriage-men', 'men-kaeshi-do', 'do-uchiotoshi-men'],
     related: ['yuko-datotsu', 'hasuji', 'issoku-itto'],
   },
   {
@@ -115,7 +115,7 @@ const GLOSSARY = [
       { title: '締める', text: '打突の瞬間に両手を内側へ絞る。' },
       { title: '緩める', text: '打った後はすぐに力を抜き、次の動きに備える。' },
     ],
-    waza: ['debana-kote', 'men'],
+    waza: ['debana-kote', 'men', 'kote', 'do', 'tsuki', 'kote-men', 'hiki-men', 'men-nuki-do', 'kote-do', 'harai-men', 'harai-kote', 'debana-men', 'hiki-kote', 'hiki-do', 'katsugi-men', 'kote-nuki-men', 'men-suriage-men', 'kote-suriage-men', 'men-kaeshi-do', 'do-uchiotoshi-men'],
     related: ['kikentai', 'hasuji'],
   },
   {
@@ -130,7 +130,7 @@ const GLOSSARY = [
       { title: '平打ちは×', text: '竹刀の側面で当たる打突は有効打突にならない。' },
       { title: '真っすぐ振る', text: '中心線に沿って振りかぶり、振り下ろす。' },
     ],
-    waza: ['men', 'debana-kote'],
+    waza: ['men', 'debana-kote', 'kote', 'do', 'tsuki', 'kote-men', 'hiki-men', 'men-nuki-do', 'kote-do', 'harai-men', 'harai-kote', 'debana-men', 'hiki-kote', 'hiki-do', 'katsugi-men', 'kote-nuki-men', 'men-suriage-men', 'kote-suriage-men', 'men-kaeshi-do', 'do-uchiotoshi-men'],
     related: ['yuko-datotsu', 'monouchi', 'tenouchi'],
   },
   {
@@ -145,7 +145,7 @@ const GLOSSARY = [
       { title: '掛かり手', text: '機会をとらえて技を出し、打ち込む側。' },
       { title: '元立ちの質', text: '機会の作り方・間合い・体さばきで稽古の効果が変わる。' },
     ],
-    waza: ['men', 'debana-kote'],
+    waza: ['men', 'debana-kote', 'kote', 'do', 'tsuki', 'kote-men', 'hiki-men', 'men-nuki-do', 'kote-do', 'harai-men', 'harai-kote', 'debana-men', 'hiki-kote', 'hiki-do', 'katsugi-men', 'kote-nuki-men', 'men-suriage-men', 'kote-suriage-men', 'men-kaeshi-do', 'do-uchiotoshi-men'],
     related: ['issoku-itto', 'okori'],
   },
   {
@@ -161,7 +161,7 @@ const GLOSSARY = [
       { title: '右足で踏む', text: '打突と同時に、足の裏全体で床を踏みしめる。' },
       { title: '引きつけ', text: '踏み込んだら、すぐに左足を引きつける。' },
     ],
-    waza: ['men', 'debana-kote'],
+    waza: ['men', 'debana-kote', 'kote', 'do', 'tsuki', 'kote-men', 'hiki-men', 'men-nuki-do', 'kote-do', 'harai-men', 'harai-kote', 'debana-men', 'hiki-kote', 'hiki-do', 'katsugi-men', 'kote-nuki-men', 'men-suriage-men', 'kote-suriage-men', 'men-kaeshi-do', 'do-uchiotoshi-men'],
     related: ['kikentai', 'issoku-itto'],
   },
 ];

@@ -87,6 +87,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .part-men { color: var(--ai); } .part-kote { color: var(--shu); } .part-do { color: var(--gold); } .part-tsuki { color: var(--ink-2); }
 .badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
 .badge.ready { background: var(--ok-soft); color: var(--ok); }
+.badge.text { background: #f6e6d8; color: #9a4a26; }
 .badge.soon { background: var(--surface-2); color: var(--ink-3); }
 .card.is-soon { opacity: .58; }
 .card.is-ready { border: 2px solid var(--shu); box-shadow: var(--shadow); transition: transform .15s ease; }
@@ -291,3 +292,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
 /* 関連する技・用語 */
 .related h2 { font-size: 18px; margin: 18px 0 12px; }
 .related .cards { margin-bottom: 8px; }
+
+.no3d-note { margin: 0 0 14px; padding: 10px 14px; background: var(--surface-2); border-radius: 10px; font-size: 14px; color: var(--ink-2, var(--ink-3)); }
+.steps-text .step { display: block; }

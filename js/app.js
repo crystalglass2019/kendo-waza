@@ -47,8 +47,8 @@
   /* ================= 技の詳細 ================= */
   function renderDetail(id) {
     const d = WAZA_DETAIL[id];
-    const has3D = Kendo3D.available();
-    app.innerHTML = Templates.detailHTML(id, root, { no3d: !has3D, analyticsNote: window.ANALYTICS_NOTE });
+    const has3D = !!d.anim && Kendo3D.available();
+    app.innerHTML = Templates.detailHTML(id, root, { no3d: !!d.anim && !has3D, analyticsNote: window.ANALYTICS_NOTE });
 
     // ページ内リンク：なめらかにスクロール（URL の # は書き換えない）
     app.querySelectorAll('.toc a').forEach(a => a.addEventListener('click', e => {

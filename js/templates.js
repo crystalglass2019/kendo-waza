@@ -16,6 +16,9 @@ const Templates = (() => {
   const glossary = () => (typeof GLOSSARY !== 'undefined' ? GLOSSARY : []);
   const videos = () => (typeof SITE_VIDEOS !== 'undefined' ? SITE_VIDEOS : []);
   const readyWaza = () => WAZA_LIST.filter(w => w.status === 'ready');
+  // ページがある技：ready＝3D付き、text＝文章のみ（3Dは準備中）
+  const isPublic = w => w.status === 'ready' || w.status === 'text';
+  const publicWaza = () => WAZA_LIST.filter(isPublic);
   // 用語名から用語ページを探す（例：「出ばな」→「起こり・出ばな」）
   const findTerm = name => glossary().find(g => g.term.split('・').includes(name) || g.term === name);
 
@@ -40,11 +43,12 @@ const Templates = (() => {
 
   /* ---------- 一覧 ---------- */
   function card(w, root) {
-    const ready = w.status === 'ready';
+    const ready = isPublic(w);
+    const textOnly = w.status === 'text';
     const inner = `
         <div class="card-top">
           <span class="part part-${partClass(w.part)}">${w.part}</span>
-          <span class="badge ${ready ? 'ready' : 'soon'}">${ready ? '公開中' : '準備中'}</span>
+          <span class="badge ${textOnly ? 'text' : ready ? 'ready' : 'soon'}">${textOnly ? '解説のみ（3D準備中）' : ready ? '公開中' : '準備中'}</span>
         </div>
         <h3>${w.name}${w.alias ? `<small>（${w.alias}）</small>` : ''}</h3>
         <p class="kana">${w.kana}</p>
@@ -101,7 +105,7 @@ const Templates = (() => {
         <div class="group-head"><h2>剣道用語の解説</h2><p>技のページに出てくる言葉を、1つずつ詳しく解説しています。<a href="${root}yogo/">用語の一覧 →</a></p></div>
         ${termLinksHTML(root, glossary().map(g => g.id))}
       </section>` : ''}
-      <p class="note">※ 現在は${WAZA_LIST.filter(w => w.status === 'ready').map(w => `「${w.name}」`).join('')}の詳細ページを公開しています（試作版）。他の技は順次追加予定です。</p>`;
+      <p class="note">※ 現在は${readyWaza().map(w => `「${w.name}」`).join('')}の3D付きページと、${WAZA_LIST.filter(w => w.status === 'text').map(w => `「${w.name}」`).join('')}の解説ページ（3Dアニメは準備中）を公開しています（試作版）。他の技は順次追加予定です。</p>`;
   }
 
   /* ---------- 技の詳細 ---------- */
@@ -110,27 +114,15 @@ const Templates = (() => {
     const d = WAZA_DETAIL[id];
     const g = groupOf(w.group);
     const anim = d.anim;
+    const hasAnim = !!anim; // 3Dのない「文章のみ」の技は anim を持たない
     const roleChip = r => `<span class="role role-${r.mark}"><i></i>${r.name}<small>（${r.sub}）</small></span>`;
 
     const vids = videos().filter(v => (v.waza || []).includes(id));
     const terms = glossary().filter(t => (t.waza || []).includes(id));
-    const related = readyWaza().filter(x => x.id !== id);
+    const related = publicWaza().filter(x => x.id !== id);
     const kwTerm = k => { const t = findTerm(k.term); return t ? `<a href="${termUrl(root, t.id)}">${k.term}</a>` : k.term; };
 
-    return `
-      <nav class="crumbs" aria-label="現在地"><a href="${homeUrl(root)}">剣道 技図鑑</a><span>›</span><span>${g.name}</span><span>›</span><span aria-current="page">${w.name}</span></nav>
-      <header class="waza-hero">
-        <div class="waza-tags">
-          <span class="cat-tag shikake">${g.category}</span><span class="tag">${g.name}</span><span class="tag">打突部位：${w.part}</span><span class="tag">${stars(w.level)} ${LEVEL[w.level]}</span>
-        </div>
-        <h1>${w.name}<span class="kana-l">${w.kana}</span></h1>
-        <p class="catch">${d.catch}</p>
-      </header>
-
-      <nav class="toc" aria-label="ページ内メニュー">
-        <a href="#sec-motion" data-sec="sec-motion">動作</a><a href="#sec-overview" data-sec="sec-overview">概要</a><a href="#sec-attacker" data-sec="sec-attacker">技を出す側</a><a href="#sec-receiver" data-sec="sec-receiver">受ける側</a><a href="#sec-match" data-sec="sec-match">試合・一本の条件</a>
-      </nav>
-
+    const motion3D = hasAnim ? `
       <section id="sec-motion" class="sec">
         <h2><span class="num">1</span>${w.name}の打ち方（動作）</h2>
         <div class="legend">${roleChip(d.roles.A)}${roleChip(d.roles.B)}</div>
@@ -189,6 +181,39 @@ const Templates = (() => {
             </li>`).join('')}
         </ol>
       </section>
+    ` : '';
+    const motionText = !hasAnim ? `
+      <section id="sec-motion" class="sec">
+        <h2><span class="num">1</span>${w.name}の打ち方（動作の流れ）</h2>
+        <p class="no3d-note">※ ${w.name}の3Dアニメーションは準備中です。公開までは、動きの流れを文章で解説します。</p>
+        <ol class="steps steps-text">
+          ${d.steps.map((s, i) => `
+            <li class="step">
+              <div class="step-body">
+                <p class="step-no">STEP ${i + 1}</p>
+                <h4>${s.title}</h4>
+                <p>${s.text}</p>
+              </div>
+            </li>`).join('')}
+        </ol>
+      </section>
+    ` : '';
+
+    return `
+      <nav class="crumbs" aria-label="現在地"><a href="${homeUrl(root)}">剣道 技図鑑</a><span>›</span><span>${g.name}</span><span>›</span><span aria-current="page">${w.name}</span></nav>
+      <header class="waza-hero">
+        <div class="waza-tags">
+          <span class="cat-tag shikake">${g.category}</span><span class="tag">${g.name}</span><span class="tag">打突部位：${w.part}</span><span class="tag">${stars(w.level)} ${LEVEL[w.level]}</span>
+        </div>
+        <h1>${w.name}<span class="kana-l">${w.kana}</span></h1>
+        <p class="catch">${d.catch}</p>
+      </header>
+
+      <nav class="toc" aria-label="ページ内メニュー">
+        <a href="#sec-motion" data-sec="sec-motion">${hasAnim ? '動作' : '打ち方の流れ'}</a><a href="#sec-overview" data-sec="sec-overview">概要</a><a href="#sec-attacker" data-sec="sec-attacker">技を出す側</a><a href="#sec-receiver" data-sec="sec-receiver">受ける側</a><a href="#sec-match" data-sec="sec-match">試合・一本の条件</a>
+      </nav>
+
+      ${hasAnim ? motion3D : motionText}
 
       <section id="sec-overview" class="sec">
         <h2><span class="num">2</span>${w.name}とは（概要）</h2>
@@ -253,7 +278,7 @@ const Templates = (() => {
   /* ---------- 用語のページ ---------- */
   function termHTML(id, root) {
     const t = glossary().find(g => g.id === id);
-    const waza = (t.waza || []).map(wid => WAZA_LIST.find(w => w.id === wid)).filter(w => w && w.status === 'ready');
+    const waza = (t.waza || []).map(wid => WAZA_LIST.find(w => w.id === wid)).filter(w => w && isPublic(w));
     return `
       <nav class="crumbs" aria-label="現在地"><a href="${homeUrl(root)}">剣道 技図鑑</a><span>›</span><a href="${root}yogo/">剣道用語</a><span>›</span><span aria-current="page">${t.term}</span></nav>
       <header class="waza-hero">
@@ -273,7 +298,7 @@ const Templates = (() => {
       </section>
 
       <section class="sec related">
-        ${waza.length ? `<h2>${t.term}が大切になる技（3Dで解説）</h2>
+        ${waza.length ? `<h2>${t.term}が大切になる技</h2>
         <div class="cards">${waza.map(w => card(w, root)).join('')}</div>` : ''}
         ${(t.related || []).length ? `<h2>関連する用語</h2>${termLinksHTML(root, t.related)}` : ''}
       </section>

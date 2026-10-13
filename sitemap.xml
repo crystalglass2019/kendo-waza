@@ -14,6 +14,38 @@
     <image:image><image:loc>https://kendo-waza.jp/img/waza/men/step5.jpg</image:loc></image:image>
   </url>
   <url>
+    <loc>https://kendo-waza.jp/kote/</loc>
+    <lastmod>2026-10-12</lastmod>
+  </url>
+  <url>
+    <loc>https://kendo-waza.jp/do/</loc>
+    <lastmod>2026-10-12</lastmod>
+  </url>
+  <url>
+    <loc>https://kendo-waza.jp/tsuki/</loc>
+    <lastmod>2026-10-12</lastmod>
+  </url>
+  <url>
+    <loc>https://kendo-waza.jp/kote-men/</loc>
+    <lastmod>2026-10-12</lastmod>
+  </url>
+  <url>
+    <loc>https://kendo-waza.jp/kote-do/</loc>
+    <lastmod>2026-10-12</lastmod>
+  </url>
+  <url>
+    <loc>https://kendo-waza.jp/harai-men/</loc>
+    <lastmod>2026-10-12</lastmod>
+  </url>
+  <url>
+    <loc>https://kendo-waza.jp/harai-kote/</loc>
+    <lastmod>2026-10-12</lastmod>
+  </url>
+  <url>
+    <loc>https://kendo-waza.jp/debana-men/</loc>
+    <lastmod>2026-10-12</lastmod>
+  </url>
+  <url>
     <loc>https://kendo-waza.jp/debana-kote/</loc>
     <lastmod>2026-10-12</lastmod>
     <image:image><image:loc>https://kendo-waza.jp/img/waza/debana-kote/step1.jpg</image:loc></image:image>
@@ -21,6 +53,46 @@
     <image:image><image:loc>https://kendo-waza.jp/img/waza/debana-kote/step3.jpg</image:loc></image:image>
     <image:image><image:loc>https://kendo-waza.jp/img/waza/debana-kote/step4.jpg</image:loc></image:image>
     <image:image><image:loc>https://kendo-waza.jp/img/waza/debana-kote/step5.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://kendo-waza.jp/hiki-men/</loc>
+    <lastmod>2026-10-12</lastmod>
+  </url>
+  <url>
+    <loc>https://kendo-waza.jp/hiki-kote/</loc>
+    <lastmod>2026-10-12</lastmod>
+  </url>
+  <url>
+    <loc>https://kendo-waza.jp/hiki-do/</loc>
+    <lastmod>2026-10-12</lastmod>
+  </url>
+  <url>
+    <loc>https://kendo-waza.jp/katsugi-men/</loc>
+    <lastmod>2026-10-12</lastmod>
+  </url>
+  <url>
+    <loc>https://kendo-waza.jp/men-nuki-do/</loc>
+    <lastmod>2026-10-12</lastmod>
+  </url>
+  <url>
+    <loc>https://kendo-waza.jp/kote-nuki-men/</loc>
+    <lastmod>2026-10-12</lastmod>
+  </url>
+  <url>
+    <loc>https://kendo-waza.jp/men-suriage-men/</loc>
+    <lastmod>2026-10-12</lastmod>
+  </url>
+  <url>
+    <loc>https://kendo-waza.jp/kote-suriage-men/</loc>
+    <lastmod>2026-10-12</lastmod>
+  </url>
+  <url>
+    <loc>https://kendo-waza.jp/men-kaeshi-do/</loc>
+    <lastmod>2026-10-12</lastmod>
+  </url>
+  <url>
+    <loc>https://kendo-waza.jp/do-uchiotoshi-men/</loc>
+    <lastmod>2026-10-12</lastmod>
   </url>
   <url>
     <loc>https://kendo-waza.jp/yogo/</loc>
