@@ -8,8 +8,8 @@ const Kendo3D = (() => {
   const D2R = Math.PI / 180;
   const HIP = 90, ANK = 8;
   const L = { torso: 46, head: 70, upper: 31, fore: 32, thigh: 48, shin: 48, shinai: 118, tsuka: 27, rhand: 15, monouchi: 93 };
-  const FIELDS = ['p', 's', 'crouch', 'lean', 'yaw', 'rf', 'rfs', 'rfy', 'lf', 'lfs', 'lfy', 'heel', 'gx', 'gy', 'gz', 'a', 'b', 'idle', 'twist'];
-  const DEFAULT_KEY = { p: 0, s: 0, crouch: 0, lean: 0, yaw: 0, rf: 16, rfs: 7, rfy: 0, lf: -22, lfs: -6, lfy: 0, heel: 18, gx: 26, gy: 14, gz: 0, a: 11, b: 0, idle: 1, twist: 0 };
+  const FIELDS = ['p', 's', 'crouch', 'lean', 'yaw', 'rf', 'rfs', 'rfy', 'lf', 'lfs', 'lfy', 'heel', 'gx', 'gy', 'gz', 'a', 'b', 'idle', 'twist', 'elb'];
+  const DEFAULT_KEY = { p: 0, s: 0, crouch: 0, lean: 0, yaw: 0, rf: 16, rfs: 7, rfy: 0, lf: -22, lfs: -6, lfy: 0, heel: 18, gx: 26, gy: 14, gz: 0, a: 11, b: 0, idle: 1, twist: 0, elb: 0 };
 
   const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
   const UP = V(0, 1, 0);
@@ -119,8 +119,10 @@ const Kendo3D = (() => {
 
     // 肘の向き：構えでは下・やや外、振りかぶりでは前・やや外に自然に向く
     // 肘は自然に下へ垂らす（外へ張らず、脇を締めすぎない：ごくわずかに外）
-    const poleR = V().addScaledVector(UP, -1).addScaledVector(R, 0.1).addScaledVector(F, 0.25);
-    const poleL = V().addScaledVector(UP, -1).addScaledVector(R, -0.1).addScaledVector(F, 0.25);
+    // elb：肘を外へ開く度合い（0＝通常、1＝大きく開く。振りかぶりで両肘が寄りすぎないように使う）
+    const ew = st.elb || 0;
+    const poleR = V().addScaledVector(UP, -1).addScaledVector(R, 0.1 + ew).addScaledVector(F, 0.25);
+    const poleL = V().addScaledVector(UP, -1).addScaledVector(R, -0.1 - ew).addScaledVector(F, 0.25);
     const elR = ik(shR, rhand, L.upper, L.fore, poleR);
     const elL = ik(shL, grip, L.upper, L.fore, poleL);
 
@@ -134,15 +136,17 @@ const Kendo3D = (() => {
     const kote = rhand.clone().lerp(elR, 7 / L.fore).addScaledVector(UP, 3).addScaledVector(R, 2);
     // 面の打突部位（正面）：頭頂部のやや前
     const men = head.clone().addScaledVector(T, 11).addScaledVector(F, 3);
+    // 胴の打突部位（右胴＝体の右側面の、やや前寄り。腰から胸の下あたり）
+    const dou = hip.clone().addScaledVector(T, 24).addScaledVector(R, 18).addScaledVector(X, 9);
 
     return {
-      dir, F, R, T, X, Xt, Rt, f0, r0, hip, chest, head, men, shR, shL, elR, elL, grip, rhand, S, kote,
+      dir, F, R, T, X, Xt, Rt, f0, r0, hip, chest, head, men, dou, shR, shL, elR, elL, grip, rhand, S, kote,
       tip: along(L.shinai), mono: along(L.monouchi), tsuba: along(L.tsuka),
       ankR, ankL, hipR, hipL, knR, knL, st,
     };
   }
 
-  const POINTS = ['tip', 'mono', 'kote', 'rhand', 'grip', 'head', 'hip', 'ankR', 'ankL', 'tsuba'];
+  const POINTS = ['tip', 'mono', 'kote', 'dou', 'rhand', 'grip', 'head', 'hip', 'ankR', 'ankL', 'tsuba'];
   function getPoint(poses, ref) {
     const [who, name] = ref.split('.');
     const alias = { monouchi: 'mono', lhand: 'grip', rf: 'ankR', lf: 'ankL' };
@@ -731,8 +735,8 @@ const Kendo3D = (() => {
     }
     viewAt(name) {
       const v = VIEWS[name];
-      if (!v.follow) return v;
-      const dx = this._mid();
+      if (!v.follow && !this.anim.followAll) return v; // followAll：走り抜ける技では、どの視点も2人の中間点を追う
+      const dx = this._mid() * (this.anim.followRate ?? 1); // followRate：追いかける割合（1未満なら、押し込む動きが見えるよう少しだけ追う）
       return { pos: v.pos.clone().setX(v.pos.x + dx), target: v.target.clone().setX(v.target.x + dx) };
     }
 
