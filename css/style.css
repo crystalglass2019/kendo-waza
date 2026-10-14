@@ -59,6 +59,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .eyebrow { font-size: 12px; letter-spacing: .2em; color: var(--gold); font-weight: 700; margin: 0 0 6px; }
 .hero h1 { font-family: var(--serif); font-size: clamp(30px, 6vw, 44px); letter-spacing: .06em; }
 .hero-lead { color: var(--on-forest-2); margin-top: 10px; max-width: 40em; }
+.hero h1 .h1-sub { display: block; font-size: clamp(14px, 3vw, 18px); letter-spacing: .08em; font-weight: 500; margin-top: 8px; color: var(--on-forest-2); }
+.hero-guide { margin-top: 14px; }
+.hero-guide a { color: var(--gold); font-weight: 700; }
 
 .toolbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding: 12px 0; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; border-bottom: 1px solid var(--line); margin-bottom: 8px; }
 .toolbar input { flex: 1 1 260px; min-width: 0; padding: 10px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink); font: inherit; }

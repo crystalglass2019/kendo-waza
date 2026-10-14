@@ -83,8 +83,9 @@ const Templates = (() => {
     return `
       <header class="hero">
         <p class="eyebrow">KENDO WAZA ZUKAN</p>
-        <h1>剣道 技図鑑</h1>
-        <p class="hero-lead">1つの技を、動き・スロー・攻める側と受ける側のコツ・一本になる条件まで、ひとつのページで。</p>
+        <h1>剣道の技一覧<small class="h1-sub">初心者向け・3Dアニメで解説</small></h1>
+        <p class="hero-lead">面・小手・胴などの打ち方を、動き・スロー・攻める側と受ける側のコツ・一本になる条件まで、1つの技ごとに解説します。</p>
+        <p class="hero-guide"><a class="back" href="${root}shoshinsha/">はじめての方へ：剣道初心者が最初に覚える技 →</a></p>
       </header>
       <div class="toolbar">
         <input id="q" type="search" placeholder="技の名前で探す（例：こて、面）" aria-label="技を検索">
@@ -271,7 +272,70 @@ const Templates = (() => {
       <footer class="foot">
         <p>※ 本ページの解説は一般的な指導内容をもとにした試作版です。細かな考え方は指導者・地域によって異なる場合があります。公開前に指導者・有段者による監修を推奨します。</p>
         ${opts.analyticsNote ? `<p>${opts.analyticsNote}</p>` : ''}
-        <a class="back" href="${homeUrl(root)}">← 技の一覧に戻る</a>
+        <a class="back" href="${homeUrl(root)}">← 技の一覧に戻る</a>　<a class="back" href="${root}shoshinsha/">初心者が最初に覚える技</a>
+      </footer>`;
+  }
+
+  /* ---------- 初心者向けの入口ページ ---------- */
+  function guideHTML(root) {
+    const pick = ids => ids.map(id => WAZA_LIST.find(w => w.id === id)).filter(w => w && isPublic(w));
+    const basic = pick(['men', 'kote', 'do']);
+    const nidan = pick(['kote-men', 'kote-do']);
+    return `
+      <nav class="crumbs" aria-label="現在地"><a href="${homeUrl(root)}">剣道 技図鑑</a><span>›</span><span aria-current="page">初心者が最初に覚える技</span></nav>
+      <header class="waza-hero">
+        <div class="waza-tags"><span class="tag">初心者向け</span></div>
+        <h1>剣道初心者が最初に覚える技</h1>
+        <p class="catch">面・小手・胴の打ち方と順番。まずは「面・小手・胴」の3つ、打つ場所と覚える順番を整理しました。</p>
+      </header>
+
+      <section class="sec">
+        <h2>剣道の技は、打つ場所で考える</h2>
+        <p>剣道で一本になる打突部位は、<b>面（頭）・小手（右手首）・胴（右の脇腹）・突き（喉）</b>の4か所です。技の名前の多くは、この打つ場所に「どんな状況で打つか」をつけたものです。たとえば「小手→面」は小手を打ってから面を打つ技、「出小手」は相手が出ようとした瞬間の小手です。</p>
+        <p>初心者はまず、打つ場所ごとの基本の打ち方（面・小手・胴）を身につけるのが近道です。突きは危険を伴うため、基本ができて、指導者のもとで稽古できる段階になってから覚えます。</p>
+      </section>
+
+      <section class="sec">
+        <h2>最初に覚える3つの技</h2>
+        <p>どれも3Dアニメで、横から・打つ人の視点から・受ける人の視点から確認できます。まず面、次に小手、最後に胴の順がおすすめです。</p>
+        <div class="cards">${basic.map(w => card(w, root)).join('')}</div>
+        <ol class="points">
+          <li><h4>① 面：すべての基本</h4><p>真っすぐ振りかぶり、真っすぐ振り下ろす動きが、ほかの技の土台になります。構え・振りかぶり・踏み込み・残心がすべて入っているので、最初に覚える技です。</p></li>
+          <li><h4>② 小手：小さく、速く</h4><p>面より振りかぶりを小さくし、手首を狙って鋭く打ちます。面で覚えた「真っすぐ打つ」感覚をコンパクトにした技です。</p></li>
+          <li><h4>③ 胴：斜めに刃筋を通す</h4><p>面・小手と違い、竹刀を斜めに振り抜きます。刃筋（竹刀の向き）を意識する練習になります。</p></li>
+        </ol>
+      </section>
+
+      <section class="sec">
+        <h2>3つに慣れたら：二段の技へ</h2>
+        <p>面・小手・胴が打てるようになったら、続けて2回打つ「二段の技」に進みます。一本目で相手を動かし、空いた場所を打つ考え方を学べます。</p>
+        <div class="cards">${nidan.map(w => card(w, root)).join('')}</div>
+        <p>そのほかの技（払い技・出ばな技・引き技・応じ技など）は、<a href="${homeUrl(root)}">技の一覧</a>から選べます。</p>
+      </section>
+
+      <section class="sec">
+        <h2>どの技にも共通する、初心者が意識したいこと</h2>
+        <ol class="points">
+          <li><h4>気剣体の一致</h4><p>声（気）・竹刀（剣）・体と足（体）が同時に決まって、はじめて一本になります。打った瞬間に踏み込む足と声をそろえる練習をします。</p></li>
+          <li><h4>打った後の残心</h4><p>打ったあとも気を抜かず、相手に備える姿勢と心構えが必要です。「打って終わり」にしないことが、一本の条件になります。</p></li>
+          <li><h4>竹刀の打突部（物打ち）で、刃筋を通して打つ</h4><p>竹刀の先の方（物打ち）で、竹刀の向きと打つ方向をそろえて打ちます。当たっただけでは一本になりません。</p></li>
+        </ol>
+        <p>それぞれの言葉の意味は、用語解説で確認できます。</p>
+        ${termLinksHTML(root, ['kikentai', 'zanshin', 'monouchi', 'hasuji', 'yuko-datotsu', 'fumikomi'])}
+      </section>
+
+      <section class="sec">
+        <h2>よくある質問</h2>
+        <dl class="glossary">
+          <div><dt>剣道の技はいくつありますか？</dt><dd>全日本剣道連盟の「剣道試合・審判規則」で定める有効打突は、打突部位（面・小手・胴・突き）への打突です。技の分類としては、しかけ技（一本打ち・二段技・払い技・出ばな技・引き技など）と、応じ技（抜き技・すり上げ技・返し技・打ち落とし技）があります。</dd></div>
+          <div><dt>初心者は何から練習すればよいですか？</dt><dd>構えと素振り、足さばきを覚えたうえで、面→小手→胴の順に打ち方を覚えるのが一般的です。このサイトの3Dアニメで動きの流れを確認してから、実際の稽古で指導者に見てもらってください。</dd></div>
+          <div><dt>どうすると一本になりますか？</dt><dd>気剣体が一致し、竹刀の打突部で、刃筋正しく打突部位を打ち、残心を示すことが条件です（有効打突）。各技のページで、一本になる条件とならない理由を解説しています。</dd></div>
+        </dl>
+      </section>
+
+      <footer class="foot">
+        <p>※ 一般的な指導内容をもとにした解説です。細かな考え方は指導者・地域によって異なる場合があります。</p>
+        <a class="back" href="${homeUrl(root)}">← 技の一覧</a>
       </footer>`;
   }
 
@@ -322,6 +386,6 @@ const Templates = (() => {
       <footer class="foot"><a class="back" href="${homeUrl(root)}">← 技の一覧</a></footer>`;
   }
 
-  return { DEFAULT_VIEW, listHTML, groupsHTML, detailHTML, termHTML, termIndexHTML, wazaUrl, homeUrl, termUrl };
+  return { DEFAULT_VIEW, listHTML, groupsHTML, detailHTML, termHTML, termIndexHTML, guideHTML, wazaUrl, homeUrl, termUrl };
 })();
 if (typeof module !== 'undefined') module.exports = Templates;
