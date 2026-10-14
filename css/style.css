@@ -298,3 +298,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 .no3d-note { margin: 0 0 14px; padding: 10px 14px; background: var(--surface-2); border-radius: 10px; font-size: 14px; color: var(--ink-2, var(--ink-3)); }
 .steps-text .step { display: block; }
+
+.comment-note { margin: 36px 0 12px; padding: 20px 22px; border: 1px solid var(--shu); border-left: 6px solid var(--shu); border-radius: 12px; background: var(--shu-soft); }
+.comment-note h2 { font-size: 17px; margin: 0 0 8px; color: var(--shu); }
+.comment-note p { margin: 0 0 14px; font-size: 14px; color: var(--ink); }
+.comment-btn { display: inline-block; padding: 10px 20px; border-radius: 999px; background: var(--shu); color: #fff; font-weight: 700; font-size: 14px; text-decoration: none; }
+.comment-btn:hover { filter: brightness(1.08); }

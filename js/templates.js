@@ -36,6 +36,13 @@ const Templates = (() => {
         </figure>`;
   }
 
+  /* ご意見・ご感想の案内：コメントは YouTube 動画のコメント欄で受け付ける */
+  function commentNoteHTML() {
+    const v = videos()[0];
+    if (!v) return '';
+    return `<aside class="comment-note"><h2>ご意見・ご感想をお寄せください</h2><p>技の動きへのご指摘や、解説へのご感想・ご要望は、YouTubeの紹介動画のコメント欄でお待ちしています。いただいた内容は、今後のアニメーションや解説の改善に活用します。</p><a class="comment-btn" href="https://www.youtube.com/watch?v=${v.id}" target="_blank" rel="noopener">YouTubeでコメントする →</a></aside>`;
+  }
+
   function termLinksHTML(root, ids) {
     return `<ul class="term-links">${ids.map(id => glossary().find(g => g.id === id)).filter(Boolean)
       .map(g => `<li><a href="${termUrl(root, g.id)}"><b>${g.term}</b><small>${g.kana}</small></a></li>`).join('')}</ul>`;
@@ -101,6 +108,7 @@ const Templates = (() => {
         <div class="group-head"><h2>紹介動画</h2><p>剣道 技図鑑でできることを、1分30秒で紹介しています。</p></div>
         ${videoHTML(videos()[0])}
       </section>` : ''}
+      ${commentNoteHTML()}
       ${glossary().length ? `
       <section class="group">
         <div class="group-head"><h2>剣道用語の解説</h2><p>技のページに出てくる言葉を、1つずつ詳しく解説しています。<a href="${root}yogo/">用語の一覧 →</a></p></div>
@@ -269,6 +277,7 @@ const Templates = (() => {
         ${vids.length ? `<h2>関連動画</h2>${vids.map(videoHTML).join('')}` : ''}
       </section>
 
+      ${commentNoteHTML()}
       <footer class="foot">
         <p>※ 本ページの解説は一般的な指導内容をもとにした試作版です。細かな考え方は指導者・地域によって異なる場合があります。公開前に指導者・有段者による監修を推奨します。</p>
         ${opts.analyticsNote ? `<p>${opts.analyticsNote}</p>` : ''}
@@ -333,6 +342,7 @@ const Templates = (() => {
         </dl>
       </section>
 
+      ${commentNoteHTML()}
       <footer class="foot">
         <p>※ 一般的な指導内容をもとにした解説です。細かな考え方は指導者・地域によって異なる場合があります。</p>
         <a class="back" href="${homeUrl(root)}">← 技の一覧</a>
