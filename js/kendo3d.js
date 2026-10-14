@@ -789,7 +789,8 @@ const Kendo3D = (() => {
         this.figs[id].update(poses[id], hist);
       }
       // 打突の閃光
-      const im = (anim.impacts || [])[0];
+      // 二段技など、打突が複数あるときは、いま光る時間帯にある打突を使う
+      const im = (anim.impacts || []).filter(i => t >= i.t && t < i.t + 0.28)[0];
       const dt = im ? t - im.t : -1;
       if (im && dt >= 0 && dt < 0.28) {
         const p = getPoint(posesAt(anim, im.t), im.at);
