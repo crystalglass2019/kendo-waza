@@ -1,7 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <rect width="64" height="64" rx="14" fill="#15231e"/>
-  <line x1="14" y1="50" x2="50" y2="14" stroke="#e9a882" stroke-width="5" stroke-linecap="round"/>
-  <line x1="14" y1="14" x2="50" y2="50" stroke="#f4f2ea" stroke-width="5" stroke-linecap="round"/>
-  <rect x="17" y="40" width="10" height="4" rx="1" transform="rotate(-45 22 42)" fill="#e9a882"/>
-  <rect x="37" y="40" width="10" height="4" rx="1" transform="rotate(45 42 42)" fill="#f4f2ea"/>
+  <!-- 竹刀 -->
+  <line x1="53" y1="9" x2="53" y2="56" stroke="#e9a882" stroke-width="3.6" stroke-linecap="round"/>
+  <!-- 胴・体（紺の稽古着） -->
+  <path d="M10 63 L10 54 Q10 46 20 45 L40 45 Q50 46 50 54 L50 63 Z" fill="#2c4a7c"/>
+  <path d="M19 45 L41 45 L41 51 Q30 55 19 51 Z" fill="#c8553d"/>
+  <!-- 面（防具）：垂れ -->
+  <path d="M12 36 L48 36 L51 47 Q30 51 9 47 Z" fill="#1d3768"/>
+  <!-- 面：頭部のドーム -->
+  <path d="M13 36 L13 24 Q13 7 30 7 Q47 7 47 24 L47 36 Z" fill="#1d3768"/>
+  <!-- 面金（格子の窓） -->
+  <rect x="19" y="19" width="22" height="16" rx="3" fill="#0e1a33"/>
+  <g stroke="#f4f2ea" stroke-width="1.8" stroke-linecap="round">
+    <line x1="19" y1="23.5" x2="41" y2="23.5"/>
+    <line x1="19" y1="28" x2="41" y2="28"/>
+    <line x1="19" y1="32" x2="41" y2="32"/>
+    <line x1="30" y1="19" x2="30" y2="35"/>
+  </g>
+  <rect x="19" y="19" width="22" height="16" rx="3" fill="none" stroke="#f4f2ea" stroke-width="2"/>
+  <!-- 面の横の縫い目 -->
+  <path d="M16 15 Q30 10 44 15" fill="none" stroke="#5f7fb8" stroke-width="1.6" stroke-linecap="round"/>
 </svg>
